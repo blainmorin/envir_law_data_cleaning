@@ -1,0 +1,1643 @@
+---
+title: "Intercoder Reliability Assessment - Summer 2021"
+subtitle: "Rea Environment and Society Lab - Environmental Law Research"
+author: "Christopher M. Rea"
+date: "8/29/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  #out.width = "95%",
+  #fig.width = 7,
+  fig.align = "center",
+  warning = FALSE,
+  message = FALSE,
+  error = FALSE
+  )
+
+###### SPECIFY PACKAGES ######
+my_packages <- c("data.table",
+                 "sfsmisc",
+                 "tidyverse","broom","skimr","sp",
+                 "reshape2",
+                 "ggalluvial",
+                 "ggmap","ggthemes","ggrepel",
+                 "directlabels","scales",#"raster",
+                 "ggpubr","stringr","zoo",
+                 #"grid","tools",
+                 "stringi",
+                 "tidyselect", "readr","magrittr",
+                 "lubridate",
+                 "compiler",
+                 "profmem",
+                 "labelled",
+                 "stringdist",
+                 "kableExtra",
+                 "krippendorffsalpha"
+                 )
+
+#install.packages(my_packages)
+###### LOAD PACKAGES ######
+lapply(my_packages, require, character.only = TRUE)
+
+###### SET WD ######
+setwd("/Users/rea.115/Dropbox/Professional/Research/_RESL/Environmental_Law_Research/ICR_blind")
+#setwd("/Users/chrisreaborn/Dropbox/Professional/Research/_RESL/Environmental_Law_Research/ICR_blind")
+```
+
+```{r}
+##### READ IN, CLEAN ICR DATA ######
+
+f = "ICR_Cases_ICR_cases_coded.csv"
+cases <- read_csv(f)
+
+# trim white space
+cases <- cases %>%
+  mutate(
+    across(
+      where(
+        is.character
+        ),
+      str_trim
+      )
+    )
+
+# make most coded text lowercase
+cases <- cases %>%
+  mutate(
+    across(
+      .cols = c(assigned,
+                group,
+                Plaintiffs:Procedural,
+                `Federal Agencies`:`EJ keywords`,
+                `Agency Deference`:`Further notes`),
+      .fns = str_to_lower
+      )
+    )
+
+###### A. Clean Plaintiff Types ######
+
+# first, identify unique values in variable to detect errors that need to be
+# corrected.
+test <- cases %>%
+  select(
+    `Plaintiff Types`
+  ) %>%
+  filter(
+    str_detect(`Plaintiff Types`,"%", negate = TRUE)
+  ) %>%
+  group_by(`Plaintiff Types`) %>%
+  filter(
+    row_number() == 1
+  ) %>%
+  ungroup() %>%
+  arrange(`Plaintiff Types`)
+
+# --> need to replace "individuals" with "individual"
+cases <- cases %>%
+  mutate(
+    `Plaintiff Types` = case_when(
+      `Plaintiff Types` == "individuals" ~ "individual",
+      TRUE ~ `Plaintiff Types`
+    )
+  )
+
+###### B. Clean Defendant Types ######
+
+# first, identify unique values in variable to detect errors that need to be
+# corrected.
+test <- cases %>%
+  select(
+    `Defendant Types`
+  ) %>%
+  filter(
+    str_detect(`Defendant Types`,"%", negate = TRUE)
+  ) %>%
+  group_by(`Defendant Types`) %>%
+  filter(
+    row_number() == 1
+  ) %>%
+  ungroup() %>%
+  arrange(`Defendant Types`)
+
+# --> need to replace "unsure" with "not listed", "inudstry" with "industry"
+
+cases <- cases %>%
+  mutate(
+    `Defendant Types` = case_when(
+      `Defendant Types` == "unsure" ~ "not listed",
+      `Defendant Types` == "inudstry" ~ "industry",
+      TRUE ~ `Defendant Types`
+    )
+  )
+
+
+###### C. Clean Outcome ######
+
+# first, identify unique values in outcome to detect errors that need to be
+# correcte. Ouly four outcomes are permissible: defendant, plaintiff, NA
+test <- cases %>%
+  select(Outcome) %>%
+  group_by(Outcome) %>%
+  filter(
+    row_number() == 1
+  ) %>%
+  ungroup() %>%
+  arrange(Outcome)
+
+# --> For ICR, good to go!
+
+###### D. Clean Procedural ######
+
+# first, identify unique values in outcome to detect errors that need to be
+# corrected.
+test <- cases %>%
+  select(Procedural) %>%
+  group_by(Procedural) %>%
+  filter(
+    row_number() == 1
+  ) %>%
+  ungroup() %>%
+  arrange(Procedural)
+
+# --> need to replace "unsure" and "mixed" with "yes"
+
+cases <- cases %>%
+  mutate(
+    Procedural = case_when(
+     #Procedural == "unsure" ~ "yes",
+      Procedural == "mixed" ~ "yes",
+      TRUE ~ Procedural
+    )
+  )
+###### E. Clean Federal Agencies ######
+
+# firsts, delete "united states" and "u.s." from data
+cases <- cases %>%
+  mutate(
+    `Federal Agencies` = str_remove(`Federal Agencies`, "united states "),
+    `Federal Agencies` = str_remove(`Federal Agencies`, "u.s. "),
+    `Federal Agencies` = str_remove(`Federal Agencies`, "department of the army%"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "environmental protection agency%","epa%"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "army corp. of engineers","acoe"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "army corp of engineers","acoe"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "united statesacoe","acoe"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "usace","acoe"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, " acoe","acoe"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "national marine fisheries service","nmfs"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "fish and wildlife service","fws"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "fish and wildlife servicfe","fws"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "usfs","fs"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "us fws","fws"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "usfws","fws"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "forest service","fs"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "national park service","nps"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "food and drug administration","fda"),
+    `Federal Agencies` = str_replace(`Federal Agencies`, "national oceanic and atmospheric administration","noaa")
+  )
+
+# second, identify unique values in outcome to detect errors that need to be
+# corrected.
+test <- cases %>%
+  select(`Federal Agencies`) %>%
+  group_by(`Federal Agencies`) %>%
+  filter(
+    row_number() == 1
+  ) %>%
+  ungroup() %>%
+  arrange(`Federal Agencies`)
+
+# --> need to make a number of replacements
+
+cases <- cases %>%
+  mutate(
+    `Federal Agencies` = case_when(
+      `Federal Agencies` == "army corp of engineers" ~ "acoe",
+      `Federal Agencies` == "army corps of engineers" ~ "acoe",
+      `Federal Agencies` == "enviornmental protection agency" ~ "epa",
+      `Federal Agencies` == "environmental protection agency" ~ "epa",
+      `Federal Agencies` == "fha" ~ "federal highway administration",
+       `Federal Agencies` == "aec" ~ "atomic energy commission",
+      TRUE ~ `Federal Agencies`
+    )
+  )
+
+###### F. Clean Location ######
+
+# first, identify unique values in variable to detect errors that need to be
+# corrected.
+test <- cases %>%
+  select(
+    `Location (state) of conflict`
+  ) %>%
+  filter(
+    str_detect(`Location (state) of conflict`,"%", negate = TRUE)
+  ) %>%
+  group_by(`Location (state) of conflict`) %>%
+  filter(
+    row_number() == 1
+  ) %>%
+  ungroup() %>%
+  arrange(`Location (state) of conflict`)
+
+# --> need to replace "unsure" with "not listed", "inudstry" with "industry"
+
+cases <- cases %>%
+  mutate(
+    `Location (state) of conflict` = case_when(
+     `Location (state) of conflict` == "ouisina" ~ "louisiana",
+      `Location (state) of conflict` == "	virginia`" ~ "virginia",
+      TRUE ~ `Location (state) of conflict`
+    )
+  )
+
+
+###### G. Clean Species ######
+
+# first, identify unique values in variable to detect errors that need to be
+# corrected.
+test <- cases %>%
+  select(
+    Species
+  ) %>%
+  #filter(
+  #  str_detect(Species,"%", negate = TRUE)
+  #) %>%
+  group_by(Species) %>%
+  filter(
+    row_number() == 1
+  ) %>%
+  ungroup() %>%
+  arrange(Species)
+
+# --> need to make several species designations consistent
+
+cases <- cases %>%
+  mutate(
+    Species = case_when(
+      Species == "bank swallows" ~ "bank swallow",
+      Species == "greywolf" ~ "grey wolf",
+      Species == "northern stopped owl" ~ "northern spotted owl",
+      Species == "salmons" ~ "salmon",
+      Species == "anchovy" ~ "northern anchovy",
+      Species == "panther" ~ "florida panther",
+      Species == "bear" ~ "grizzly bear",
+      Species == "snake river fall chinook%other salmon" ~ "salmon",
+      Species == "breeding swine" ~ "pigs",
+      Species == "blunt-nosed leapord lizard%san joaquin kit fox%giant kangaroo rat" ~ "blunt-nosed leopard lizard%san joaquin kit fox%giant kangaroo rat",
+      TRUE ~ Species
+    )
+  )
+
+###### H. Clean Federal Statutes ######
+
+# first, identify unique values in variable to detect errors that need to be
+# corrected.
+test <- cases %>%
+  select(
+    `Federal Statutes`
+  ) %>%
+  #filter(
+  #  str_detect(Species,"%", negate = TRUE)
+  #) %>%
+  group_by(`Federal Statutes`) %>%
+  filter(
+    row_number() == 1
+  ) %>%
+  ungroup() %>%
+  arrange(`Federal Statutes`)
+
+# --> need to make recode several statutes to be consistent
+
+cases <- cases %>%
+  mutate(
+    `Federal Statutes` = str_replace(`Federal Statutes`, "aea","atomic energy act"),
+    `Federal Statutes` = str_replace(`Federal Statutes`, "superfund","cercla"),
+    `Federal Statutes` = str_replace(`Federal Statutes`, "resource conservation and recovery act","rcra"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal water pollution control act","cwa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "fwpca","cwa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "clean water a","cwa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "clean water act","cwa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "cwact","cwa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "cwa%cwa","cwa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "cercla%superfund","cercla"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "cercla%rcra%cercla","cercla%rcra"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "cercla%cercla","cercla"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "clean air act","caa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "nepa%nepa","nepa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "surface mining and reclamation act","surface mining control and reclamation act"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "endanged species act","esa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "endangered species act","esa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal food, drug, and cosmetic act","federal food, drug and cosmetic act"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "ffdca","federal food, drug and cosmetic act"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "multiple use sustained yield act","multiple-use sustained yield act"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "national environmental policy act","nepa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "neps","nepa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "nfma","national forest management act"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "the surface mining control and reclamation act","surface mining control and reclamation act"),
+    `Federal Statutes` = str_replace(`Federal Statutes`, "tsca","toxic substances control act"),
+    `Federal Statutes` = str_replace(`Federal Statutes`, "smcra","surface mining control and reclamation act")
+  )
+
+# now reorder all statute entries in alphabetical order to make sure that statutes listed in different orders are not coded differently.
+
+cases <- cases %>%
+  mutate(
+    sat_num = str_count(`Federal Statutes`, "%") + 1
+  ) %>%
+  mutate(
+    `Federal Statutes` = str_remove_all(`Federal Statutes`, ",")
+  ) %>%
+  separate(
+    `Federal Statutes`,
+    into = c("A","B","C","D","E","Ff","G","H"),
+    sep = "%"
+    ) %>%
+  rowwise %>%
+  mutate(
+    # sort listed statutes in alphabetical order
+    `Federal Statutes` = list(sort(c(A, B, C, D, E, Ff, G, H)))
+  ) %>%
+  select( # drop separated columns
+    -c(sat_num,A, B, C, D, E, Ff, G, H)
+  ) %>%
+  mutate(
+    `Federal Statutes` = toString(`Federal Statutes`),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, ", ", "%")
+    )
+
+# look for duplicate statutes again to get rid of them
+
+cases <- cases %>%
+  mutate(
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "cwa%cwa","cwa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "cercla%cercla","cercla"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "nepa%nepa","nepa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "%esa%multiple-use sustained yield act%national forest management act%nepa%nfma%wilderness act","esa%multiple-use sustained yield act%national forest management act%nepa%nfma%wilderness act")
+  )
+
+# and, reorder in alphabetical order again!
+cases <- cases %>%
+  mutate(
+    sat_num = str_count(`Federal Statutes`, "%") + 1
+  ) %>%
+  mutate(
+    `Federal Statutes` = str_remove_all(`Federal Statutes`, ",")
+  ) %>%
+  separate(
+    `Federal Statutes`,
+    into = c("A","B","C","D","E","Ff","G","H"),
+    sep = "%"
+    ) %>%
+  rowwise %>%
+  mutate(
+    # sort listed statutes in alphabetical order
+    `Federal Statutes` = list(sort(c(A, B, C, D, E, Ff, G, H)))
+  ) %>%
+  select( # drop separated columns
+    -c(sat_num,A, B, C, D, E, Ff, G, H)
+  ) %>%
+  mutate(
+    `Federal Statutes` = toString(`Federal Statutes`),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, ", ", "%")
+    )
+
+cases <- cases %>%
+  mutate(
+    `Federal Statutes` = str_replace_all(`Federal Statutes`,
+                                         "%esa%multiple-use sustained yield act%national forest management act%national forest management act%nepa%wilderness act",
+                                         "esa%multiple-use sustained yield act%national forest management act%national forest management act%nepa%wilderness act"),
+    # VERY IMPORTNAT - replace empty rows with NAs.
+    `Federal Statutes` = case_when(
+      `Federal Statutes` == "" ~ NA_character_,
+      TRUE ~ `Federal Statutes`
+    )
+  )
+
+# Finally, re-identify unique values in variable to verify cleaning process.
+test <- cases %>%
+  select(
+    `Federal Statutes`
+  ) %>%
+  #filter(
+  #  str_detect(Species,"%", negate = TRUE)
+  #) %>%
+  group_by(`Federal Statutes`) %>%
+  filter(
+    row_number() == 1
+  ) %>%
+  ungroup() %>%
+  arrange(`Federal Statutes`)
+    
+
+
+```
+
+
+
+```{r}
+
+# list of variable names
+var_names <- cases %>%
+  select(
+    `Plaintiff Types`,`Defendant Types`:`Agency Deference`,-`Outcome Notes`
+  ) %>%
+  names()
+
+# append outcome (excl. "mixed") after outcome
+var_names <- append(var_names, "Outcome (excl. mixed)", after = 6)
+var_names <- append(var_names, "Federal Statutes", after = 10)
+
+
+# list of corresponding Krippendorff alphas, calculated below
+kalpha <- c(
+  "0.8914", "0.8914", "?",
+  "?", "?", "0.6351",
+  "0.8430","0.1447","0.9990",
+  "0.8511","0.8128","0.8446",
+  "0.7912","?","0.6136",
+  "0.9971","0.8695","?",
+  "0.6512"
+)
+
+# combine these two vectors to make a data frame
+vars_kalphas <- tibble(var_names,kalpha)
+
+```
+
+### Executive Summary
+
+I calculate intercoder reliability scores for a sample of 101 legal cases blindly coded by either three or four researchers. Scores are calculated with Krippendorff's alpha, a versatile, robust, and widely used measure of intercoder reliability. An alpha of 0 indicates perfect disagreement across coders. An alpha of 1 indicates perfect agreement. No universal or hard and fast rules apply for what is - or is not - an acceptable threshold for "high" intercoder agreement, but generally, Krippendorff's alphas over 0.80 are considered an indicator of very strong agreement and thus, reliable data.
+
+The chart below summarizes the Krippendorff's alpha scores for many of the variables we coded for over the summer. Purple colors signal high agreement (darker colors signal more agreement) while orange colors signal high disagreement (darker colors signal more disagreement). 
+
+```{r}
+
+# set cell spec for kaplha values in table
+#vars_kalphas$kalpha = cell_spec(vars_kalphas$kalpha, align = "c")
+
+# make into pretty kable table:
+vars_kalphas %>%
+  rename(
+    "Variable" = "var_names",
+    "Krippendorff's Alpha" = "kalpha"
+  ) %>%
+  mutate(
+    text_color = case_when(
+      `Krippendorff's Alpha` == "?" ~ "A",
+      TRUE ~ "B"
+    ),
+    a_level = case_when(
+      `Krippendorff's Alpha` == "?" ~ "E",
+      as.numeric(`Krippendorff's Alpha`) < .5 ~ "A",
+      as.numeric(`Krippendorff's Alpha`) >= .5 & as.numeric(`Krippendorff's Alpha`) < .7 ~ "B",
+      as.numeric(`Krippendorff's Alpha`) >= .7 & as.numeric(`Krippendorff's Alpha`) < .8 ~ "C",
+      as.numeric(`Krippendorff's Alpha`) >= .8 ~ "D",
+      TRUE ~ "E"
+    ),
+    `Krippendorff's Alpha` = cell_spec(`Krippendorff's Alpha`,
+                                       color = factor(
+                                         text_color,
+                                         c("A","B"),
+                                         c("#000000","#ffffff")
+                                         ),
+                                       background = factor(
+                                         a_level,
+                                         c("A", "B", "C", "D", "E"),
+                                         c("#e66101", "#fdb863", "#b2abd2", "#5e3c99", "#ffffff00")
+                                         )
+                                       )
+    ) %>%
+  select(
+    -a_level, -text_color
+    ) %>%
+  kbl(
+    align = c("l","c"),
+    escape = F
+  ) %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Summary of Intercoder Reliability Scores" = 2))
+  
+```
+
+Note that not all variables in the raw data are included in the table since not all variables can be compared across coders (e.g. Outcome Notes). Some variables are included in the table but their scores are not shown because they require further cleaning or meta-categorization before they can me assessed in terms of intercoder reliability. (e.g. Type of Nature).
+
+Taken as a whole, the results are very encouraging and suggest that the data the research team generated this summer is robust. This is fantastic news! 
+
+The one glaring exception is the "Procedural" variable, which has a very, very low intercoder reliability score - so low that we probably won't be able to use data derived from this code.  A handful of other codes require further investigation, like Agency Deference and EJ Number, which may have errors stemming from differences in find+ search strings.
+
+
+### Introduction
+
+Intercoder reliability is an important means of assessing the reliability of subjectively coded data. Assigning "codes" to qualitative data, like legal cases, is often partly subjective - for example, determining the Type of Nature at issue in a case - and is also always prone to human error. Even when coding is objective (i.e. counting the number of matches arising from a pre-specified search string), a human coder may miscount items or transpose numbers and so on. 
+
+Inter-coder reliability checks are systemic means of assessing the rates of these errors, and thus assessing how reliably coded the data actually is. The idea behind such assessments of reliability is simple: have multiple people (trained coders) code the same content - legal decisions in our case - and then compare the codes assigned by the different coders to assess how reliably the data is coded. Where agreement across the coders is high, the data is understood as robust and we can be reasonably confident that the inferences we make from the data are only minimally influenced by errors. Where  agreement across the coders is low, the data is understood as weak and it may not reasonable to use it make inferences about patterns within the data. After all, any "pattern" discovered where coding is inconsistent might just be a coincidence! 
+
+The simplest and best discussion of intercoder reliability that I have come across was published about 20 years ago: 
+
+- Lombard, M., Snyder‐Duch, J., & Bracken, C. C. (2002). Content analysis in mass communication: Assessment and reporting of intercoder reliability. Human communication research, 28(4), 587-604.  
+    
+The paper is simple and easy to read and gives a good overview of different approaches to calculating intercoder reliability scores. See that paper if you want to learn more. Two takeaways are important: 
+
+1. Likely the best -  and certainly the most universally accepted - means of calculating intercoder reliability is Krippendorff's alpha, which is a value that ranges from 0 (perfect disagreement) to 1 (perfect agreement). It can be used for any number of codes and any number of coders, takes chance similarity into account (note that random coding of a binary variable would produce 50% agreement!), can handle missing data, and provides a number of ways of calculating reliability depending on the type of data (e.g. numeric versus nominal). We will use Krippendorff's alpha for calculating intercoder reliability for our project. 
+
+2. Whatever method one uses to calculate intercoder reliability, there is no universal standard for what constitutes "acceptable" agreement. In general, when using Krippendorff's alpha, a threshold of 0.8 or higher is considered to be strong agreement, but this is a subjective determination and the threshold might reasonably be set higher or lower for any given situation.
+
+
+### Overview of Intercoder Reliablity Testing for ELR Data
+
+Below I report the intercoder reliability scores for a range of variables that the ELR group coded for over the summer. The data for computing the scores were collected in early-to-mid summer and were collected "blind" - that is, researchers didn't realize that the cases they were coding would be used for calculating intercoder reliability scores. More specifically, during the data collection process coding work was split across four research teams, each with a unique corpus of several thousand legal cases.  To assess intercoder reliability, 101 legal decisions were taken from one team's corpus and secretly inserted into the other three teams' corpuses. 50 of those 101 cases were designated as cases to be set aside and coded later in the originating team's corpus, but 51 were not so designated and thus were coded by members of the originating team, again, without the research team members knowing that their coding work would be used for intercoder reliability assessments. Thus, for the purposes of intercoder reliability, 51 cases were repeatedly coded by four distinct researchers (across all four research teams) and 50 more cases were coded by three distinct researchers (across three of the four research teams).
+
+
+### Researchers Involved
+
+The researchers involved in the intercoder reliability test are as follows, as indicated by their coding initials, including the fraction of the total coding (across all four teams) they contributed:
+
+```{r}
+
+###### INDENTIFY CODERS #####
+cases %>%
+  ungroup() %>%
+  select(
+    assigned
+  ) %>%
+  mutate(
+    N = n()
+  ) %>%
+  group_by(
+    assigned
+  ) %>%
+  mutate(
+    n = n(),
+    pct = round(n/N*100,1)
+  ) %>%
+  filter(
+    row_number() == 1
+  ) %>%
+  ungroup() %>%
+  arrange(-pct) %>%
+  rename(
+    "Researcher" = "assigned",
+    "% cases" = "pct"
+  ) %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Researchers Included in ICR Calculations" = 4))
+
+```
+
+### ICR for Plaintiff Types
+
+It is difficult to calculate intercoder reliability where multiple codes can be assigned to a single case. For simplicity, ICR codes reported below are calculated only for cases with a single plaintiff. This excludes 8 cases And a handful of individual observations (e.g. coded by only one researcher as having multiple PLAINTIFFS). The full set of plaintiffs and their coded values are reported below. 
+
+```{r}
+###### A. ICR FOR PLAINTIFF TYPES ######
+
+# build ICR matrix 
+cases_ptyp <- cases %>%
+  select(
+    assigned, ID, `Plaintiff Types`
+  ) %>%
+  filter(
+    str_detect(`Plaintiff Types`,"%", negate = TRUE)
+  ) %>%
+  mutate(
+    `Plaintiff Types` = as_factor(`Plaintiff Types`),
+    `Plaintiff Types` = as.numeric(`Plaintiff Types`)
+  ) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = `Plaintiff Types`
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_ptyp <- 
+  krippendorffs.alpha(
+    cases_ptyp,
+    level = "nominal",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_ptyp)
+
+```
+
+The reported alpha, 0.8914, is very high, suggesting a high degree of intercoder agreement and high quality data for plaintiff types. For thoroughness, the full set of cases, including those with multiple plaintiffs, and the assigned plaintiff type codes assigned to them, are shown below. Note that cases with multiple plaintiffs also show high agreement. 
+
+```{r}
+# look at coding manually
+cases %>%
+  select(
+   ID, `Plaintiff Types`
+  ) %>%
+  mutate(
+    `Plaintiff Types` = str_replace_all(`Plaintiff Types`, "%", " %")
+  ) %>%
+  group_by(ID) %>%
+  mutate(
+    `Plaintiff Types` = as_factor(`Plaintiff Types`),
+    num = row_number()
+  ) %>%
+  pivot_wider(
+    names_from = num,
+    values_from = `Plaintiff Types`
+  ) %>%
+  ungroup() %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Plaintiff Type Codes Assigned by Researchers" = 5))
+
+```
+
+
+### ICR for Defendant Types
+
+As above, it is difficult to calculate intercoder reliability where multiple codes can be assigned to a single case. For simplicity, ICR codes reported below are calculated only for cases with a single defendant. This excludes 8 cases and a handful of individual observations (e.g. coded by only one researcher as having multiple defendants). The full set of defendants and their coded values are reported below. 
+
+```{r}
+###### A. ICR FOR PLAINTIFF TYPES ######
+
+# build ICR matrix 
+cases_dtyp <- cases %>%
+  select(
+    assigned, ID, `Defendant Types`
+  ) %>%
+  filter(
+    str_detect(`Defendant Types`,"%", negate = TRUE)
+  ) %>%
+  mutate(
+    `Defendant Types` = as_factor(`Defendant Types`),
+    `Defendant Types` = as.numeric(`Defendant Types`)
+  ) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = `Defendant Types`
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_dtyp <- 
+  krippendorffs.alpha(
+    cases_ptyp,
+    level = "nominal",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_dtyp)
+
+```
+
+The reported alpha, 0.8914, the same as plaintiff type, is also very high, suggesting a high degree of intercoder agreement and very high quality data for defendant types. For thoroughness, the full set of cases, including those with multiple defendants, and the assigned defendant type codes assigned to them, are shown below. Note that as with miltiple plaintiff cases, cases with multiple defendants also show high agreement. 
+
+```{r}
+# look at coding manually
+cases %>%
+  select(
+   ID, `Defendant Types`
+  ) %>%
+  group_by(ID) %>%
+  mutate(
+    `Defendant Types` = as_factor(`Defendant Types`),
+    num = row_number()
+  ) %>%
+  pivot_wider(
+    names_from = num,
+    values_from = `Defendant Types`
+  ) %>%
+  ungroup() %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Defendant Type Codes Assigned by Researchers" = 5))
+
+```
+
+### ICR for Aim
+
+Aim was a subjectively determined code that we have not developed uniform meta-categories for. Thus, we cannot calculate an intercoder reliability score for this code. A glance at the data, however, does suggest a high degree of conceptual agreement across coders:
+
+```{r}
+# look at coding manually
+cases %>%
+  select(
+   ID, Aim
+  ) %>%
+  group_by(ID) %>%
+  mutate(
+    Aim = as_factor(Aim),
+    num = row_number()
+  ) %>%
+  pivot_wider(
+    names_from = num,
+    values_from = Aim
+  ) %>%
+  ungroup() %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Aim Codes Assigned by Researchers" = 5))
+```
+
+
+
+
+### ICR for Type of Nature
+
+Intercoder reliability cannot be calculated for type of nature until we have established meta-categories for all types of nature and can map all individual codes to those meta-categories. As with Aim, however, a subjective examination of the codes assigned across researchers suggests a high degree of conceptual agreement, boding well for the use of this data:
+
+```{r}
+# look at coding manually
+cases %>%
+  select(
+   ID, `Type of Nature`
+  ) %>%
+  group_by(ID) %>%
+  mutate(
+    `Type of Nature` = as_factor(`Type of Nature`),
+    num = row_number()
+  ) %>%
+  pivot_wider(
+    names_from = num,
+    values_from = `Type of Nature`
+  ) %>%
+  ungroup() %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Type of Nature Codes Assigned by Researchers" = 5))
+```
+
+
+### ICR for Object of Contention
+
+Just like Aim and Type of Nature, intercoder reliability cannot be calculated for Object of Contention since we do not have uniform codes across cases. Still, like above, a subjective examination of the codes assigned across researchers suggests a moderately high degree of conceptual agreement, once again boding well for the use of this data in subsequent analyses:
+
+```{r}
+# look at coding manually
+cases %>%
+  select(
+   ID, `Object of Contention`
+  ) %>%
+  group_by(ID) %>%
+  mutate(
+    `Object of Contention` = as_factor(`Object of Contention`),
+    num = row_number()
+  ) %>%
+  pivot_wider(
+    names_from = num,
+    values_from = `Object of Contention`
+  ) %>%
+  ungroup() %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Object of Contention Codes Assigned by Researchers" = 5))
+```
+
+### ICR for Case Outcome
+
+Compared to plaintiff and defendant type, outcome seems simpler to calculate ICR scores because only a single code is allowed for every case: the judge either rules for the plaintiff, the defendant, or there is a mixed outcome, with each side winning and losing in part.
+
+```{r}
+###### C. ICR FOR OUTCOME ######
+
+# build ICR matrix 
+cases_outcome <- cases %>%
+  select(
+    assigned, ID, Outcome
+  ) %>%
+  mutate(
+    Outcome = as_factor(Outcome),
+    Outcome = as.numeric(Outcome)
+  ) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = Outcome
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_outcome <- 
+  krippendorffs.alpha(
+    cases_outcome,
+    level = "nominal",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_outcome)
+
+```
+
+The calculated alpha of 0.6351 is not abysmally low, but it is - probably - lower than we might hope for and does not suggest that we could use assigned outcome codes to make inferences without concerns that our inferences could be in error. 
+
+The most significant number we might be interested in calculating, however, is the win rate of (or the loss rate) of a given plaintiff or defendant type. "Mixed" outcomes would either be dropped from such a calculation entirely, or included in both calculations, i.e. a given plaintiff would be categorized as winning *and* losing. In effect, "mixed" outcome comes are dual: they indicate that the outcome favors the plaintiff and the defendant. This re-introduces the problem we have with plaintiff and defendant type codes above: some cases ("mixed" outcome cases) effectively have multiple codes! Further, in the calculation of win and loss rates, "mixed" codes would enter into either calculation. In this sense, a case coded as having an outcome that favors the plaintiff by one coder and having an outcome that is mixed in another coder's assessment does not actually change the win rate calculation whatsoever, since in both instances could be included in the win-rate calculation. 
+
+A subjective examination of the coding patterns reveals that much of this intercoder disagreemnt stems from these mixed outcome codes:
+
+```{r}
+
+# look at coding manually
+cases %>%
+  select(
+   ID, Outcome
+  ) %>%
+  group_by(ID) %>%
+  mutate(
+    Outcome = as_factor(Outcome),
+    num = row_number()
+  ) %>%
+  pivot_wider(
+    names_from = num,
+    values_from = Outcome
+  ) %>%
+  ungroup() %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Case Outcome Codes Assigned by Researchers" = 5))
+```
+
+Since these "mixed" codes have no substantive effect on win rate calculations, we can drop them and recalculate our Krippendorff's alpha:
+
+```{r}
+
+# recalculate ICR recoding "mixed" to NA (so "mixed" cases are effectively dropped
+# from calculation)
+cases_outcome <- cases %>%
+  select(
+    assigned, ID, Outcome
+  ) %>%
+  mutate(
+    Outcome = case_when(
+      Outcome == "mixed" ~ NA_character_,
+      TRUE ~ Outcome
+    ),
+    Outcome = as_factor(Outcome),
+    Outcome = as.numeric(Outcome)
+  ) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = Outcome
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+  
+
+icr_outcome <- 
+  krippendorffs.alpha(
+    cases_outcome,
+    level = "nominal",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+summary(icr_outcome)
+
+# results: 
+#       Estimate  Lower   Upper
+# alpha   0.8624   0.759   .9557
+
+```
+
+The result is a much higher: 0.843, well above conventional standards for high intercoder agreement and suggestive of the fact that we can be confident in the usability of our outcome data, particularly for the calculation of win and loss rates by, for example, plaintiff type.
+
+### ICR for Procedural
+
+The procedural variable is a simply binary: either a case is or is not procedural. ICR calculations for procedural are thus straightforward.
+
+
+```{r}
+# build ICR matrix 
+cases_proc <- cases %>%
+  select(
+    assigned, ID, Procedural
+  ) %>%
+  filter(
+    str_detect(Procedural,"%", negate = TRUE)
+  ) %>%
+  mutate(
+    Procedural = as_factor(Procedural),
+    Procedural = as.numeric(Procedural)
+  ) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = Procedural
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_proc <- 
+  krippendorffs.alpha(
+    cases_proc,
+    level = "nominal",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_proc)
+
+```
+
+The Krippendorff's alpha for procedural *is* abysmally low (0.1447), suggesting that this code may be unusable in subsequent analysis. This is not surprising: throughout the summer, determining if a case was procedural or not was one of the most challenging codes to assign. Looking at the raw coding data quickly illustrate almost universal *disagreement* about the procedural character of a case. 
+
+```{r}
+# look at coding manually
+cases %>%
+  select(
+   ID, Procedural
+  ) %>%
+  group_by(ID) %>%
+  mutate(
+    Procedural = as_factor(Procedural),
+    num = row_number()
+  ) %>%
+  pivot_wider(
+    names_from = num,
+    values_from = Procedural
+  ) %>%
+  ungroup() %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Procedural Codes Assigned by Researchers" = 5))
+```
+
+It is also possible that a single coder - particularly a person who coded many cases - could substantially throw the coding off. This is worth checking into because in this case, the alpha is SO low that is almost suggests perfect *disagreement*. Perfect disagreement, of course, is non-random and suggests that a given researcher might be using an opposite heuristic to signal that a case is procedural relative to other researchers. In our case, "sie" (Sam Evans) is, by far, the most prolific coder, so if his logic is opposite everyone else's on procedural coding, Sam alone could drive the Krippendorff's alpha very low. Dropping Sam's coding work from the data, however, actaully makes the alpha worse - and really, doesn't change it it in ay substantive way - it's still terrible.
+
+```{r}
+# build ICR matrix 
+cases_proc <- cases %>%
+  select(
+    assigned, ID, Procedural
+  ) %>%
+  filter(
+    str_detect(Procedural,"%", negate = TRUE),
+    (assigned != "sie")
+  ) %>%
+  mutate(
+    Procedural = as_factor(Procedural),
+    Procedural = as.numeric(Procedural)
+  ) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = Procedural
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_proc <- 
+  krippendorffs.alpha(
+    cases_proc,
+    level = "nominal",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_proc)
+
+```
+
+Researcher "mnl" (Meghan Mitchell) also coded a large number of cases, but dropping her coding work from the data has a similar null effect: alpha shifts from 0.14 to 0.16 - essentially the same! The same holds if we drop Clara's coding or Dylan's coding - none of these single individuals, who were among the most prolific coders of the ICR data, makes much difference! 
+
+```{r}
+# build ICR matrix 
+cases_proc <- cases %>%
+  select(
+    assigned, ID, Procedural
+  ) %>%
+  filter(
+    str_detect(Procedural,"%", negate = TRUE),
+    (assigned != "mnl")
+  ) %>%
+  mutate(
+    Procedural = as_factor(Procedural),
+    Procedural = as.numeric(Procedural)
+  ) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = Procedural
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_proc <- 
+  krippendorffs.alpha(
+    cases_proc,
+    level = "nominal",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_proc)
+
+```
+
+But the extremely high level of disagreement still suggests that different people are using systematically heuristics to identify whether a case is procedural or not. For example, using only cases coded by Sam Evans and Dylan Page yields a Krippendorff's alpha of 0.589 - not extremely high, but high enough to suggest a more consistent approach to coding between these two researchers. Similarly, using only Sam DeWitt's and Meghan's coding produces an alpha of 0.5 - much higher - but combining all four researchers - both Sams, Dylan, and Meghan - drops alpha back to 0.16. 
+
+The suggestion is that Sam DeWitt and Meghan are using at least semi-similar logic, and Sam Evans and Dylan are using at least semi-similar logic, but that taken as a whole, the four of them - and indeed, the whole team! - is all over the map. So, salvaging the procedural code may not be possible - it seems like this was jsut a really tough thing to identify in the cases! Not having this data is not the end of the world.
+
+```{r eval=FALSE, include=FALSE}
+# build ICR matrix 
+cases_proc <- cases %>%
+  select(
+    assigned, ID, Procedural
+  ) %>%
+  filter(
+    str_detect(Procedural,"%", negate = TRUE),
+    (assigned == "mnl" |
+       assigned == "sjd" |
+       assigned == "dlp" |
+       assigned == "sie")
+  ) %>%
+  mutate(
+    Procedural = as_factor(Procedural),
+    Procedural = as.numeric(Procedural)
+  ) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = Procedural
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_proc <- 
+  krippendorffs.alpha(
+    cases_proc,
+    level = "nominal",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_proc)
+
+```
+
+
+### ICR for No. Citing Decisions
+
+The number of citing decisions is directly transcribed from case data - it requires no subjective interpretation - and thus we expect alpha to be very high. Indeed, it is: 0.999 - effectively, perfect agreement.
+
+```{r}
+###### C. ICR FOR No. Citing Decision ######
+
+# build ICR matrix 
+cases_outcome <- cases %>%
+  select(
+    assigned, ID, `No. Citing Decisions`
+  ) %>%
+  #mutate(
+    #Outcome = as_factor(Outcome),
+  #  Outcome = as.numeric(Outcome)
+  #) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = `No. Citing Decisions`
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_outcome <- 
+  krippendorffs.alpha(
+    cases_outcome,
+    level = "interval",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_outcome)
+
+```
+
+
+
+### ICR for Federal Agencies
+
+Calculating ICT for federal agencies requires substantial data cleaning, performed earlier and "behind the scenes" in the script that generates this document. After cleaning, however, Krippendorff's alpha is very high:
+
+```{r}
+# build ICR matrix 
+cases_fedagy <- cases %>%
+  select(
+    assigned, ID, `Federal Agencies`
+  ) %>%
+  filter(
+    str_detect(`Federal Agencies`,"%", negate = TRUE)
+  ) %>%
+  mutate(
+    `Federal Agencies` = as_factor(`Federal Agencies`),
+    `Federal Agencies` = as.numeric(`Federal Agencies`)
+  ) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = `Federal Agencies`
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_fedagy <- 
+  krippendorffs.alpha(
+    cases_fedagy,
+    level = "nominal",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_fedagy)
+```
+ 
+Note that this alpha = 0.8675 is raw, without dropping observations with multiple agency codes as in the case of, for example, plaintiff and defendant types, above. The raw coding results are worth examining, just for gratification: 
+
+```{r}
+# look at coding manually
+cases %>%
+  select(
+   ID, `Federal Agencies`
+  ) %>%
+  group_by(ID) %>%
+  mutate(
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "%", "%"),
+    `Federal Agencies` = as_factor(`Federal Agencies`),
+    num = row_number()
+  ) %>%
+  pivot_wider(
+    names_from = num,
+    values_from = `Federal Agencies`
+  ) %>%
+  ungroup() %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Federal Agency Codes Assigned by Researchers" = 5))
+```
+
+### ICR for Location
+
+Location is lifted fairly directly from the information in the case, so should result in high intercoder reliability. And indeed, intercoder reliability is high (0.8446). 
+
+```{r}
+###### C. ICR FOR Location ######
+
+# build ICR matrix 
+cases_loc <- cases %>%
+  select(
+    assigned, ID, `Location (state) of conflict`
+  ) %>%
+  mutate(
+    `Location (state) of conflict` = as_factor(`Location (state) of conflict`),
+    `Location (state) of conflict` = as.numeric(`Location (state) of conflict`)
+  ) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = `Location (state) of conflict`
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_loc <- 
+  krippendorffs.alpha(
+    cases_loc,
+    level = "interval",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_loc)
+
+
+```
+
+An examination  of the raw coded data confirms that a good portion of the disagreement here has to do with the use of "several" or "nationwide" codes.
+
+```{r}
+# look at coding manually
+cases %>%
+  select(
+   ID, `Location (state) of conflict`
+  ) %>%
+  group_by(ID) %>%
+  mutate(
+    `Location (state) of conflict` = as_factor(`Location (state) of conflict`),
+    num = row_number()
+  ) %>%
+  pivot_wider(
+    names_from = num,
+    values_from = `Location (state) of conflict`
+  ) %>%
+  ungroup() %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Location Codes Assigned by Researchers" = 5))
+```
+
+
+### ICR for Species
+
+After data cleaning to make species codes consistent across coders (e.g. getting rid of misspellings and so on), intercoder reliability for species is moderately high - 0.7912 - but *just* below the 0.80 threshold. 
+
+```{r}
+###### C. ICR FOR No. Citing Decision ######
+
+# build ICR matrix 
+cases_spec <- cases %>%
+  select(
+    assigned, ID, Species
+  ) %>%
+  mutate(
+    Species = as_factor(Species),
+    Species = as.numeric(Species)
+  ) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = Species
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_spec <- 
+  krippendorffs.alpha(
+    cases_spec,
+    level = "nominal",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_spec)
+
+
+```
+
+A closer look at the coded data, however, reveals coding is still highly consistent and there are few instances when coders fundamentally disagree (i.e. identify different species, or one coder identifies a species and another does not). 
+
+```{r}
+# look at coding manually
+cases %>%
+  select(
+   ID, Species
+  ) %>%
+  group_by(ID) %>%
+  mutate(
+    Species = str_replace_all(Species, "%", "%"),
+    Species = as_factor(Species),
+    num = row_number()
+  ) %>%
+  pivot_wider(
+    names_from = num,
+    values_from = Species
+  ) %>%
+  ungroup() %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Species Codes Assigned by Researchers" = 5))
+```
+
+
+### ICR for Federal Statutues
+
+Assessing the intercoder reliability for federal statutes is particularly challenging because of the substantial data cleaning required to make sure that data are comparable. Spelling errors need to be corrected, acronyms and full names of statutes made consistent (caa for the Clean Air Act and so on), and idential statutes listed multiple times need to be removed (e.g. superfund and CERCLA are the same but are often both listed. Same with Clean Water Act and Federal Water Pollution Act and so on.) 
+
+Further, one this element of data cleaning is done, because so many cases invoke multiple statutes, the *order* of statutes listed be each coder needs to be made uniform. If this step is not taken, substantively identical codes expressed in different orders will be treated as disagreements when calculating Krippendorff's alpha (e.g. cwa%esa will not be treated the same as esa%cwa even though these are, in fact, identical codes). 
+
+Even once all this is done, intercoder reliability is bound to be assessed at lower rates than actual coding suggests. That's because if a case lists four statutes and one coder identifies all four and one coder only lists only three, these two coders are still 75% in agreement, but as calculated here, even a single *character* discrepancy between the assigned codes across the two coders will yield a "non-match" and be coded as disagreement. So, what is, in effect, an instance where the coders are in 75% agreement ends up being treated as a case where they are 0% in agreement. The result is a biasing downwards of the intercoder reliability score.
+
+Thus, the reported Krippendorff's alpha of 0.8128 for federal statutes is *very* good and likely underestimates overall agreement. 
+
+```{r}
+###### C. ICR for Federal Statutes ######
+
+# build ICR matrix 
+cases_fedstat <- cases %>%
+  select(
+    assigned, ID, `Federal Statutes`
+  ) %>%
+  mutate(
+    `Federal Statutes` = as_factor(`Federal Statutes`),
+    `Federal Statutes` = as.numeric(`Federal Statutes`)
+  ) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = `Federal Statutes`
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_fedstat <- 
+  krippendorffs.alpha(
+    cases_fedstat,
+    level = "nominal",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_fedstat)
+
+
+```
+
+And, indeed, a closer look at the coded data confirms that coding is, in fact, highly consistent and there are few instances when coders fundamentally disagree (i.e. identify completely different statutes or one coder identifies a  stutue and another does not identify any statutues at all.
+
+```{r}
+# look at coding manually
+cases %>%
+  select(
+   ID, `Federal Statutes`
+  ) %>%
+  group_by(ID) %>%
+  mutate(
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "%", "%"),
+    `Federal Statutes` = as_factor(`Federal Statutes`),
+    num = row_number()
+  ) %>%
+  pivot_wider(
+    names_from = num,
+    values_from = `Federal Statutes`
+  ) %>%
+  ungroup() %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Federal Statutue Codes Assigned by Researchers" = 5))
+```
+
+### ICR for EJ keywords
+
+I do not calculate ICR for EJ keywords yet.
+
+
+### ICR for EJ Number
+
+The number of environmental justice terms is derived from a direct find+ search and should thus be completely uniform across coders. However, the alpha is moderately low - only 0.6136.
+
+```{r}
+###### C. ICR FOR No. Citing Decision ######
+
+# build ICR matrix 
+cases_ejnum <- cases %>%
+  select(
+    assigned, ID, `EJ Number`
+  ) %>%
+  #mutate(
+    #Outcome = as_factor(Outcome),
+  #  Outcome = as.numeric(Outcome)
+  #) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = `EJ Number`
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_ejnum <- 
+  krippendorffs.alpha(
+    cases_ejnum,
+    level = "interval",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_ejnum)
+
+
+```
+
+The source of the discrepancy is unclear at first, but suggest inconsistent find+ search strings used across researchers. Examining the table of coded results suggests the same thing - inconsistent search strings yielding different counts for different researchers.
+
+```{r}
+# look at coding manually
+cases %>%
+  select(
+   ID, `EJ Number`
+  ) %>%
+  group_by(ID) %>%
+  mutate(
+    `EJ Number` = as_factor(`EJ Number`),
+    num = row_number()
+  ) %>%
+  pivot_wider(
+    names_from = num,
+    values_from = `EJ Number`
+  ) %>%
+  ungroup() %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Number of EJ Terms as Coded by Researchers" = 5))
+```
+
+
+### ICR for Science
+
+Signals of scientific data discussed in the court case are also determined directly by a simple find+ search and should thus be completely uniform across coders. As expected, agreement is nearly perfect: 0.9971.
+
+```{r}
+###### C. ICR for Drs and PhDs ######
+
+# build ICR matrix 
+cases_sci <- cases %>%
+  select(
+    assigned, ID, Science
+  ) %>%
+  #mutate(
+    #Outcome = as_factor(Outcome),
+  #  Outcome = as.numeric(Outcome)
+  #) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = Science
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_sci <- 
+  krippendorffs.alpha(
+    cases_sci,
+    level = "interval",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_sci)
+```
+
+### ICR for Drs and PhDs
+
+Like the number of environmental justice terms and signals of scientific data discussed in the court case, the number of Drs and PhDs is derived from a direct find+ search and should thus be completely uniform across coders. Agreement is not perfect, but it is high (0.8695).
+
+```{r}
+###### C. ICR for Drs and PhDs ######
+
+# build ICR matrix 
+cases_drphd <- cases %>%
+  select(
+    assigned, ID, `Drs and PhDs`
+  ) %>%
+  #mutate(
+    #Outcome = as_factor(Outcome),
+  #  Outcome = as.numeric(Outcome)
+  #) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = `Drs and PhDs`
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_drphd <- 
+  krippendorffs.alpha(
+    cases_drphd,
+    level = "interval",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_drphd)
+```
+
+
+
+### ICR for Agency Deference
+
+Agency Deference is also derived from a direct find+ search and should thus be completely uniform across coders. Agreement is not especially high, however (alpha = 0.6512). 
+
+```{r}
+###### C. ICR for Drs and PhDs ######
+
+# build ICR matrix 
+cases_agydef <- cases %>%
+  select(
+    assigned, ID, `Agency Deference`
+  ) %>%
+  mutate(
+    `Agency Deference` = as_factor(`Agency Deference`),
+    `Agency Deference` = as.numeric(`Agency Deference`)
+  ) %>%
+  pivot_wider(
+    names_from = assigned,
+    values_from = `Agency Deference`
+  ) %>%
+  select(
+    -ID
+  ) %>%
+  as.matrix()
+
+# calculate ICR
+icr_agydef <- 
+  krippendorffs.alpha(
+    cases_agydef,
+    level = "interval",
+    control = list(parallel = FALSE),
+    verbose = TRUE)
+
+# summarize ICR
+summary(icr_agydef)
+```
+
+```{r}
+# look at coding manually
+cases %>%
+  select(
+   ID, `Agency Deference`
+  ) %>%
+  group_by(ID) %>%
+  mutate(
+    `Agency Deference` = as_factor(`Agency Deference`),
+    num = row_number()
+  ) %>%
+  pivot_wider(
+    names_from = num,
+    values_from = `Agency Deference`
+  ) %>%
+  ungroup() %>%
+  kbl() %>%
+  kable_styling(
+    bootstrap_options = c("striped","condensed"),
+    full_width = F,
+    position = "center") %>%
+  add_header_above(c("Agency Deference as Coded by Researchers" = 5))
+```
+
+The source of intercoder disagreement here needs to be more carefully identified.
