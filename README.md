@@ -11,10 +11,10 @@ Instructions for setting up rstudio with github are here: https://happygitwithr.
 
 We can also add and dispatch tasks here in lieu of a google doc. 
 
-| Task  | Assigned to |
-| ------------- | ------------- |
-| Trim white spaced from strings  | Blain Morin  |
-| Another task  | Another Person  |
+| Task  | Assigned to | Complete? |
+| ------------- | ------------- | ------------- |
+| Trim white space from strings  | Blain Morin  | Yes|
+| Another task  | Another Person  | No|
 
 
 # Example Structure
