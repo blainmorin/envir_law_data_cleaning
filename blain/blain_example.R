@@ -1,1 +1,0 @@
-### Blain example
