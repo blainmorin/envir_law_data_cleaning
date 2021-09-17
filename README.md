@@ -40,7 +40,7 @@ library(tidyverse)
 ```
 
 
-When you write your script, you can assume that this master preamble will me run before your work is called. 
+When you write your script, you can assume that this master preamble will run before your work is executed. 
 
 ---
 
