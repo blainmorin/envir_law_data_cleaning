@@ -17,10 +17,5 @@ law.df = law.df %>%
 
 
 
-### Hello World
 
-### This is some work ive done today
 
-### this work oim one day two
-
-### now i am complete
