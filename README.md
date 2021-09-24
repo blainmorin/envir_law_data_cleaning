@@ -2,7 +2,12 @@
 
 We can decide if this system works for everyone, but my thought is to have separate scripts for each data cleaning task. Contribute your work to your folder, then we can call them from the master_clean.R file. 
 
-Instructions for setting up rstudio with github are here: https://happygitwithr.com/rstudio-git-github.html
+Instructions for setting up rstudio with github are here:
+
+https://rfortherestofus.com/2021/02/how-to-use-git-github-with-r/
+
+https://happygitwithr.com/rstudio-git-github.
+
 * Remember to pull before you push!
 
 
