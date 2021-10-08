@@ -48,6 +48,10 @@ data_fed_agency <- data %>%
   filter(
     row_number()== 1
   ) %>%
-  ungroup()
+  ungroup() %>%
+  arrange( 
+   desc(`Federal Agencies`)
+  )
 
+?arrange
 
