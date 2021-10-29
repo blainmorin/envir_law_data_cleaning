@@ -120,5 +120,83 @@ species_df <- species_data %>%
   ) %>%
   mutate(
     Species = str_replace_all(Species, "owls", "owl")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "swallows", "swallow")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "pelicans", "pelican")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "cows", "cow")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "mussels", "mussel")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "falcons", "falcon")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "dolphins", "dolphin")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "elephants", "elephant")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "seals", "seal")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "shortnose suckers", "shortnose sucker"),
+    Species = str_replace_all(Species, "razorback suckers", "razorback sucker")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "lemurs", "lemur")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, ", ", "%")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "mollusks", "mollusk")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "tunas", "tuna")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "pigs", "pig")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "certain types of alligators and crocodiles",
+                              "crocodile%alligator")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "salmonids", "salmonid")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "egrets", "egret")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "terns", "tern")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "oranges", "orange"),
+    Species = str_replace_all(Species, "grapefruits", "grapefruit")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "plants", "plant")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "trees", "tree")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "other shore and wading birds", "shore birds%wading birds")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "gb haddock", "georges bank haddock"),
+    Species = str_replace_all(Species, "gb yellowtail flounder", "georges bank yellowtail flounder"),
+    Species = str_replace_all(Species, "gb winter flounder", "georges bank winter flounder"),
+    Species = str_replace_all(Species, "gom haddock", "gulf of maine haddock"),
+    Species = str_replace_all(Species, "gom winter flounder", "gulf of maine winter flounder"),
+    Species = str_replace_all(Species, "atlantic wolffish.", "atlantic wolffish")
   )
+
 
