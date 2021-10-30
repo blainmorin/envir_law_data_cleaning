@@ -196,7 +196,41 @@ species_df <- species_data %>%
     Species = str_replace_all(Species, "gb winter flounder", "georges bank winter flounder"),
     Species = str_replace_all(Species, "gom haddock", "gulf of maine haddock"),
     Species = str_replace_all(Species, "gom winter flounder", "gulf of maine winter flounder"),
-    Species = str_replace_all(Species, "atlantic wolffish.", "atlantic wolffish")
+    Species = str_replace_all(Species, "atlantic wolffish.", "atlantic wolffish"),
+    Species = str_replace_all(Species, "cape cod/gom yellowtail flounder", "cape cod/gulf of maine yellowtail flounder"),
+    Species = str_replace_all(Species, "sne/ma winter flounder", "southern new england/mid-atlantic winter flounder")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "donkeys\\(wild\\)", "wild donkey")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "blueback herring \\(alosa aestivalis\\)", "blueback herring"),
+    Species = str_replace_all(Species, "delta smelt \\(fish\\)", "delta smelt"),
+    Species = str_replace_all(Species, "chinook salmon \\(eggs and fry\\)", "chinook salmon"),
+    Species = str_replace_all(Species, "cicurina cueva \\(spider\\)", "cicurina cueva"),
+    Species = str_replace_all(Species, "georges bank \\(gb\\) cod", "georges bank cod"),
+    Species = str_replace_all(Species, "gulf of maine \\(gom\\) cod", "gulf of maine cod"),
+    Species = str_replace_all(Species, "southern new england/mid-atlantic \\(sne/ma\\) yellowtail flounder",
+                              "southern new england/mid-atlantic yellowtail flounder")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "gom dps atlantic salmon", "gulf of maine distinct population segment atlantic salmon")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "raccoons", "raccoon")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "woodpeckers", "woodpecker"),
+    Species = str_replace_all(Species, "hawks", "hawk")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "orcas", "orca")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "sage-grouse", "sage grouse")
   )
+
+species_df$Species [728] <- 
+  "butterflies%birds%seabirds%neotropical birds%flamingo%wading birds%grebe%grouse%parakeets%curassows%quail%flightless birds%pigeon%warbler%passerine birds"
 
 
