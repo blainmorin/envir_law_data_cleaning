@@ -71,6 +71,7 @@ species_df <- species_data %>%
   ) %>%
   mutate(
     Species = str_replace_all(Species, "turtles", "turtle"),
+    Species = str_replace_all(Species, "baby turtle", "turtle"),
     Species = str_replace_all(Species, "green sea turtles", "green sea turtle"),
     Species = str_replace_all(Species, "loggerhead sea turtles", "loggerhead sea turtle"),
     Species = str_replace_all(Species, "sea turtles", "sea turtle"),
@@ -221,6 +222,7 @@ species_df <- species_data %>%
   ) %>%
   mutate(
     Species = str_replace_all(Species, "woodpeckers", "woodpecker"),
+    Species = str_replace_all(Species, "blacked-backed woodpecker", "black-backed woodpecker"),
     Species = str_replace_all(Species, "hawks", "hawk")
   ) %>%
   mutate(
@@ -228,9 +230,35 @@ species_df <- species_data %>%
   ) %>%
   mutate(
     Species = str_replace_all(Species, "sage-grouse", "sage grouse")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "branchinecta lynchi", "fairy shrimp")
   )
+
+species_df$Species [4938] <-
+  "freshwater mussel%dark pigtoe%plicate rocksnail%black warrior waterdog%flattened musk turtle%rush darter%cahaba shiner%indiana bat%northern long-eared bat"
 
 species_df$Species [728] <- 
   "butterflies%birds%seabirds%neotropical birds%flamingo%wading birds%grebe%grouse%parakeets%curassows%quail%flightless birds%pigeon%warbler%passerine birds"
+
+##separating by flora, fauna, and ecosystem
+
+fauna <- c("elk", "oyster", "chub", "alabama beach mouse", "american eel", "american lobster", "artic grayling", "asian carp", 
+           "asian elephant", "atlantic bluefin tuna", "atlantic salmon", "atlantic summer flounder", "bald eagle", "bank swallow", 
+           "bats", "bear", "beluga sturgeon", "bi-state sage grouse", "bighorn sheep", "bison", "black bear", "black-backed woodpecker", 
+           "blueback herring", "brown pelican", "bull trout")
+
+df_species <- species_df %>%
+  mutate(
+    Species_Type = case_when(
+      Species %in% fauna ~ "fauna"
+    )
+  )
+
+
+
+
+
+
 
 
