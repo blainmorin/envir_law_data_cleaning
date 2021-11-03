@@ -58,6 +58,7 @@ sep_df <-
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"individaul", "individual"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"individiual%ngo", "individual%ngo"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"individauk", "individual"),
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"individuak", "individual"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"individual%ciy%state%ngo%other", "individual%local%state%ngo%other"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"individual%estate", "individual%state"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"individual%trade_assm%industry", "individual%trade_assn%industry"),
@@ -66,8 +67,10 @@ sep_df <-
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"individuals%local", "individual%local"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"indsutry", "industry"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"indsutries", "industry"),
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"industries", "industry"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"industry%indivudal", "industry%individual"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"industy%indivudal", "industry%individual"),
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"industy%individual", "industry%individual"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"n/a", "none"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"ngi", "none"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"ngo%civic_assn%civic_assn", "ngo%civic_assn"),
@@ -79,6 +82,9 @@ sep_df <-
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"raymond s. hardman", "individual"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"religious", "religious_org"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"religious_org%individuals", "religious_org%individual"),
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"religious_org_org", "religious_org"),
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"religious_org_org%individual", "religious_org%individual"),
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"religious_org_org%individual%civic_assn", "religious_org%individual%civic_assn"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"city", "local"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"city%civic_assn", "local%civic_assn"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"city%individual", "local%individual"),
@@ -88,22 +94,43 @@ sep_df <-
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"state%city", "state%local"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"individual%city", "individual%local"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"individual%city%industry", "individual%local%industry"),
-      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"ngo%city%local","ngo%local")
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"ngo%city%local","ngo%local"),
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"civic_assn&ngo","civic_assn%ngo"),
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"civil_assn","civic_assn"),
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"fed%civiv_assn","fed%civic_assn"),
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"local%ngo%inudstry%individual","local%ngo%industry%individual")
     )
   
   #re-run separate multiple variables for identifying data that needs fixed
-  ##need to ask blain about why this df is not updated from code above?
   
   ncols <- max(stringr::str_count(data_plaintiff_type$'Plaintiff Types', "%")) + 1
   colmn <- paste("col", 1:ncols)
   
   sep_plaintiff_type_df <-
     tidyr::separate(
-      data = data_plaintiff_type,
+      data = plaintiff_type_df,
       col = 'Plaintiff Types',
       sep = "%",
       into = colmn,
       remove = FALSE
     )
   sep_plaintiff_type_df[is.na(sep_plaintiff_type_df)] <- "none"  
- 
+  
+  #view unique values of cleaned data to double check work and catch any typos I missed
+  #to view each column in unique_sep_pt, grouped by and arranged by "`col 1`, `col 2`, etc."
+  
+  unique_sep_pt <- sep_plaintiff_type_df %>%
+    select(
+      `Plaintiff Types`,`col 1`,`col 2`,`col 3`,`col 4`,`col 5`, `col 6`
+    ) %>%
+    group_by(
+      `col 6`
+    ) %>%
+    filter(
+      row_number()== 1
+    ) %>%
+    arrange(
+      desc(`col 6`)
+    )
+  
+# plaintiff_type_df should be fully cleaned now! 
