@@ -52,7 +52,7 @@ sep_df <-
   plaintiff_type_df <- data_plaintiff_type %>%
     mutate(
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"u.s. department of labor federal credit union","fed"),
-      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"unclear","unknown"),
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"unclear","other"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"fed, ngo", "fed%ngo"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"inc", "industry"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"individaul", "individual"),
@@ -72,7 +72,7 @@ sep_df <-
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"industy%indivudal", "industry%individual"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"industy%individual", "industry%individual"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"n/a", "none"),
-      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"ngi", "none"),
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"ngi", "ngo"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"ngo%civic_assn%civic_assn", "ngo%civic_assn"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"ngo%indivdual", "ngo%individual"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"ngo%individuals", "ngo%individual"),
@@ -98,7 +98,8 @@ sep_df <-
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"civic_assn&ngo","civic_assn%ngo"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"civil_assn","civic_assn"),
       `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"fed%civiv_assn","fed%civic_assn"),
-      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"local%ngo%inudstry%individual","local%ngo%industry%individual")
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"local%ngo%inudstry%individual","local%ngo%industry%individual"),
+      `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"unknown","other")
     )
   
   #re-run separate multiple variables for identifying data that needs fixed
@@ -134,3 +135,5 @@ sep_df <-
     )
   
 # plaintiff_type_df should be fully cleaned now! 
+
+  
