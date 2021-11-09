@@ -36,7 +36,8 @@ species_df <- species_data %>%
   mutate(
     Species = str_replace_all(Species, "grizzly bears", "grizzly bear"),
     Species = str_replace_all(Species, "grizzlies", "grizzly bear"),
-    Species = str_replace_all(Species, "louisiana blackbear", "lousiana black bear")
+    Species = str_replace_all(Species, "louisiana blackbear", "lousiana black bear"),
+    Species = str_replace_all(Species, "greater yellowstone ecosystem grizzly bear", "grizzly bear")
   ) %>%
   mutate(
     Species = str_replace_all(Species, "whales", "whale")
@@ -77,7 +78,7 @@ species_df <- species_data %>%
     Species = str_replace_all(Species, "sea turtles", "sea turtle"),
     Species = str_replace_all(Species, "loggerhead turtles", "loggerhead sea turtle"),
     Species = str_replace_all(Species, "loggerhead turtle", "loggerhead sea turtle"),
-    Species = str_replace_all(Species, "sea turtles inhabiting the pacific ocean", "sea turtle")
+    Species = str_replace_all(Species, "sea turtle inhabiting the pacific ocean", "sea turtle")
   ) %>%
   mutate(
     Species = str_replace_all(Species, "chubs", "chub")
@@ -238,7 +239,9 @@ species_df <- species_data %>%
     Species = str_replace_all(Species, "imperiled sage grouse", "sage grouse")
   ) %>%
   mutate(
-    Species = str_replace_all(Species, "branchinecta lynchi", "fairy shrimp")
+    Species = str_replace_all(Species, "branchinecta lynchi", "fairy shrimp"),
+    Species = str_replace_all(Species, "san diego fairy shrimp", "fairy shrimp"),
+    Species = str_replace_all(Species, "san diego dairy shrimp", "fairy shrimp")
   ) %>%
   mutate(
     Species = str_replace_all(Species, "eagles", "eagle")
@@ -265,6 +268,60 @@ species_df <- species_data %>%
   ) %>%
   mutate(
     Species = str_replace_all(Species, "red-legged frog", "red legged frog")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "scimitarhorned oryx", "scimitar-horned oryx")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "bull-trout", "bull trout")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "steelhead", "steelhead trout"),
+    Species = str_replace_all(Species, "steelhead trout trout", "steelhead trout")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "sacramento river winter-run chinook salmon", "winter chinook salmon"),
+    Species = str_replace_all(Species, "sacramento river spring-run chinook salmon", "spring chinook salmon"),
+    Species = str_replace_all(Species, "chinook", "chinook salmon"),
+    Species = str_replace_all(Species, "chinook salmon salmon", "chinook salmon"),
+    Species = str_replace_all(Species, "sockeye", "sockeye salmon"),
+    Species = str_replace_all(Species, "sockeye salmon salmon", "sockeye salmon"),
+    Species = str_replace_all(Species, "coho", "coho salmon"),
+    Species = str_replace_all(Species, "coho salmon salmon", "coho salmon"),
+    Species = str_replace_all(Species, "west coast coho salmon", "coho salmon"),
+    Species = str_replace_all(Species, "winter-run chinook salmon", "winter chinook salmon"),
+    Species = str_replace_all(Species, "winter chinook salmon slamon", "winter chinook salmon"),
+    Species = str_replace_all(Species, "spring-run chinook salmon", "spring chinook salmon"),
+    Species = str_replace_all(Species, "puget sound chinook salmon", "chinook salmon"),
+    Species = str_replace_all(Species, "lower columbia river chinook salmon", "chinook salmon"),
+    Species = str_replace_all(Species, "snake river spring and summer chinook salmon", "spring chinook salmon%summer chinook salmon"),
+    Species = str_replace_all(Species, "central valley spring chinook salmon", "spring chinook salmon"),
+    Species = str_replace_all(Species, "central valley spring-run chinook salmon", "spring chinook salmon"),
+    Species = str_replace_all(Species, "wild spring chinook salmon", "spring chinook salmon"),
+    Species = str_replace_all(Species, "snake river sockeye salmon", "sockeye salmon"),
+    Species = str_replace_all(Species, "upper columbia river spring chinook salmon", "spring chinook salmon"),
+    Species = str_replace_all(Species, "columbia river chum salmon", "chum salmon"),
+    Species = str_replace_all(Species, "lower columbia river/southwest washington coho salmon", "coho salmon"),
+    Species = str_replace_all(Species, "upper willamettte river chinook salmon", "chinook salmon"),
+    Species = str_replace_all(Species, "snake river fall chinook salmon", "fall chinook salmon"),
+    Species = str_replace_all(Species, "hood canal summer run chum", "summer chum salmon"),
+    Species = str_replace_all(Species, "oregon coastal coho salmon", "coho salmon"),
+    Species = str_replace_all(Species, "ozette lake sockeye salmon", "sockeye salmon"),
+    Species = str_replace_all(Species, "steelhead trout salmon", "steelhead trout%salmon"),
+    Species = str_replace_all(Species, "southern oregon/northern california coast coho salmon", "coho salmon")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "old forest growth dependent species", "old growth forest dependent species")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "protected fish", "fish")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "palila", "palila finch"),
+    Species = str_replace_all(Species, "palila finch finch", "palila finch")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, "northern stopped owl", "northern spotted owl")
   )
 
 species_df$Species [4938] <-
@@ -272,6 +329,8 @@ species_df$Species [4938] <-
 
 species_df$Species [728] <- 
   "butterflies%birds%seabirds%neotropical birds%flamingo%wading birds%grebe%grouse%parakeets%curassows%quail%flightless birds%pigeon%warbler%passerine birds"
+
+species_df$Species [5856] <- "cod%haddock%yellowtail flounder%american plaice%witch flounder%winter flounder%redfish%white hake%pollock%windowpane flounder%ocean pout%atlantic halibut%atlantic wolffish"
 
 ##separating by % so I can code for flora, fauna, and ecosystem
 
@@ -352,14 +411,16 @@ fauna <- c("elk", "oyster", "chub", "alabama beach mouse", "american eel", "amer
            "red-tailed hawk", "central valley spring-run chinook salmon", "vernal pool tadpole shrimp", "vernal pool custaceans", 
            "rhadine exilis", "rhadine internalis", "meshweaver spider", "red legged frog", "red fox", "least tern", 
            "light-footed clapper rail", "rainbow trout", "bat", "rail", "loon", "pacific salmon", "pacific groundfish", 
-           "pacific whiting", "nova salmon", "whitefish")
+           "pacific whiting", "nova salmon", "whitefish", "scimitar-horned oryx")
 
 flora <- c("245 unnamed plant species", "alpine plant", "mint", "orange", "grapefruit", "corn", "dudley bluffs bladderpod", 
            "dudley bluffs twinpod", "douglas-fir tree", "englemann spruce tree", "alfalfa", "hauchuca water umbel", "marijuana", 
            "capsule dung moss", "cattail", "texas wild-rice", "sugar beets", "skunk cabbage", "slickspot peppergrass", 
            "sequoia sempervirens", "sebastopol meadowfoam", "san fernando valley spineflower", "sagebrush", "western juniper", 
            "sacramento ocrutt grass", "slender orcutt grass", "riparian vegetation", "red maple", "ash", "hickory", "water oak", 
-           "sweet bay", "red bay tree", "red mangrove", "port orford cedar", "penstemon", "pea plant")
+           "sweet bay", "red bay tree", "red mangrove", "port orford cedar", "penstemon", "pea plant", "mixed northern hardwoods")
+
+ecosystem <- c("old growth forest dependent species", "aspen stands", "coral reef")
 
 
 df_species <- sep_df %>%
@@ -404,7 +465,27 @@ df_species <- sep_df %>%
       `col 17` %in% flora ~ "flora",
       `col 18` %in% flora ~ "flora",
       `col 19` %in% flora ~ "flora",
-      `col 20` %in% flora ~ "flora")
+      `col 20` %in% flora ~ "flora",
+      `col 1` %in% ecosystem ~ "ecosystem", 
+      `col 2` %in% ecosystem ~ "ecosystem",
+      `col 3` %in% ecosystem ~ "ecosystem",
+      `col 4` %in% ecosystem ~ "ecosystem",
+      `col 5` %in% ecosystem ~ "ecosystem",
+      `col 6` %in% ecosystem ~ "ecosystem",
+      `col 7` %in% ecosystem ~ "ecosystem",
+      `col 8` %in% ecosystem ~ "ecosystem",
+      `col 9` %in% ecosystem ~ "ecosystem",
+      `col 10` %in% ecosystem ~ "ecosystem",
+      `col 11` %in% ecosystem ~ "ecosystem",
+      `col 12` %in% ecosystem ~ "ecosystem",
+      `col 13` %in% ecosystem ~ "ecosystem",
+      `col 14` %in% ecosystem ~ "ecosystem",
+      `col 15` %in% ecosystem ~ "ecosystem",
+      `col 16` %in% ecosystem ~ "ecosystem",
+      `col 17` %in% ecosystem ~ "ecosystem",
+      `col 18` %in% ecosystem ~ "ecosystem",
+      `col 19` %in% ecosystem ~ "ecosystem",
+      `col 20` %in% ecosystem ~ "ecosystem")
   )
 
 
