@@ -528,3 +528,16 @@ species.df <- df_species %>%
 
 species.df[is.na(species.df)] <- "none"
 
+
+
+
+
+library(usethis)
+
+git config --global user.email "ppatel7697@gamil.com"
+git config --global user.name "Prachi Patel"
+
+use_git_config(user = "ppatel2001", "ppatel7697@gmail.com")
+
+
+
