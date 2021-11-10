@@ -30,7 +30,7 @@ data_outcome <- data %>%
 
 data_outcome[is.na(data_outcome)] <- "none"
 
-#fix typos
+#fix typos and incorrect codes
 
 outcome_df <- data_outcome %>%
   mutate(
@@ -47,13 +47,14 @@ outcome_df <- data_outcome %>%
     `Outcome` = str_replace_all(`Outcome`,"defenant","defendant"),
     `Outcome` = str_replace_all(`Outcome`,"defedant","defendant"),
     `Outcome` = str_replace_all(`Outcome`,"denied","defendant"),
-    `Outcome` = str_replace_all(`Outcome`,"unsure","unclear"),
-    `Outcome` = str_replace_all(`Outcome`,"unknown","unclear"),
+    `Outcome` = str_replace_all(`Outcome`,"unsure","unknown"),
+    `Outcome` = str_replace_all(`Outcome`,"unclear","unknown"),
     `Outcome` = str_replace_all(`Outcome`,"industry%individual","mixed"),
     `Outcome` = str_replace_all(`Outcome`,"neither all motions denied","mixed"),
     `Outcome` = str_replace_all(`Outcome`,"neither all motions defendant","mixed"),
     `Outcome` = str_replace_all(`Outcome`,"neither","mixed"),
-    `Outcome` = str_replace_all(`Outcome`,"neither\\?","mixed")
+    `Outcome` = str_replace_all(`Outcome`,"neither\\?","mixed"),
+    `Outcome` = str_replace_all(`Outcome`,"mixed\\?","mixed")
   )
     
     
