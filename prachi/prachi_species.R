@@ -340,6 +340,9 @@ species_df <- species_data %>%
   ) %>%
   mutate(
     Species = str_replace_all(Species, "migritory birds%", "migratory birds")
+  ) %>%
+  mutate(
+    Species = str_replace_all(Species, ",%", "%")
   )
 
 species_df$Species [4938] <-
