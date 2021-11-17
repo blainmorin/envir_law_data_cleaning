@@ -12,19 +12,6 @@ data <- read_csv("cases_coded_prelim_clean1.csv")
 #create outcome dataframe and arrange to see unique values
 
 data_outcome <- data %>%
-  select(
-    `Outcome`
-  ) %>%
-  group_by(
-    `Outcome`
-  ) %>%
-  filter(
-    row_number()== 1
-  ) %>%
-  ungroup() %>%
-  arrange(
-    desc(`Outcome`)
-  )
 
 #make blanks none
 
@@ -57,4 +44,4 @@ outcome_df <- data_outcome %>%
     `Outcome` = str_replace_all(`Outcome`,"mixed\\?","mixed")
   )
     
-    
+#outcome is cleaned
