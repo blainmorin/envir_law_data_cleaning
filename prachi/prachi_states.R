@@ -35,10 +35,12 @@ states_df <- states_data %>%
   mutate(
     `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "west", "west virginia"),
     `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "west virginia virginia", "west virginia"),
+    `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "west virginia virigina", "west virginia"),
     `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, ", bluefield", "west virginia"),
     `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "west virginiaern", "west virginia"),
     `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "west virginiawest virginia", "west virginia"),
-    `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "american west virginia", "west virginia")
+    `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "american west virginia", "west virginia"),
+    `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "west virginia great lakes region", "west virginia")
   ) %>%
   mutate(
     `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "pacific northwest virginia", "virginia")
@@ -119,7 +121,32 @@ states_df <- states_data %>%
   ) %>%
   mutate(
     `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "unknown", "oregon")
+  ) %>%
+  mutate(
+    `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "viriginia", "virginia")
+  ) %>%
+  mutate(
+    `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "alaksa", "alaska")
+  ) %>%
+  mutate(
+    `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "antartica", "antarctica")
+  ) %>%
+  mutate(
+    `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "u.s. fish and wildlife service", "alaska"),
+    `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "clean water act", "west virginia")
+  ) %>%
+  mutate(
+    `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "pennsylvania%several", "several")
   )
 
+states_df$`Location (state) of conflict` [7123] <- "north carolina"
+
+states_df$`Location (state) of conflict` [1543] <- "north dakota"
+
+states_df$`Location (state) of conflict` [1185] <- "texas%gulf of mexico"
+
+states_df$`Location (state) of conflict` [1172] <- "new england states"
+
+states_df$`Location (state) of conflict` [3542] <- "new jersey%pennsylvania"
 
 
