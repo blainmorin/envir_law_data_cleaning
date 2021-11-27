@@ -5,7 +5,7 @@ library(stringr)
 data <- read_csv("cases_coded_prelim_clean1.csv")
 
 states_data <- data %>%
-  select(`Location (state) of conflict`)
+  select(`Location (state) of conflict`, ID)
 
 states_data[is.na(states_data)] <- "none"
 
@@ -137,16 +137,13 @@ states_df <- states_data %>%
   ) %>%
   mutate(
     `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "pennsylvania%several", "several")
+  ) %>%
+  mutate(
+    `Location (state) of conflict` = ifelse(ID == "2015-0139-Angler-001" & `Location (state) of conflict` == "northeast", "new england states", `Location (state) of conflict`),
+    `Location (state) of conflict` = ifelse(ID == "2009-0632-Gonzal-001" & `Location (state) of conflict` == "south", "texas%gulf of mexico", `Location (state) of conflict`),
+    `Location (state) of conflict` = ifelse(ID == "2017-0257-N.D.eX-001" & `Location (state) of conflict` == "dakota", "north dakota", `Location (state) of conflict`),
+    `Location (state) of conflict` = ifelse(ID == "1976-0415-Maryla-001" & `Location (state) of conflict` == "northeast", "new jersey%pennsylvania", `Location (state) of conflict`),
+    `Location (state) of conflict` = ifelse(ID == "1998-1998-Americ-003" & `Location (state) of conflict` == "carolina", "north carolina", `Location (state) of conflict`)
   )
-
-states_df$`Location (state) of conflict` [7123] <- "north carolina"
-
-states_df$`Location (state) of conflict` [1543] <- "north dakota"
-
-states_df$`Location (state) of conflict` [1185] <- "texas%gulf of mexico"
-
-states_df$`Location (state) of conflict` [1172] <- "new england states"
-
-states_df$`Location (state) of conflict` [3542] <- "new jersey%pennsylvania"
 
 
