@@ -5,7 +5,7 @@ library(stringr)
 data <- read_csv("cases_coded_prelim_clean1.csv")
 
 species_data <- data %>%
-  select(Species)
+  select(Species, ID)
 
 species_data[is.na(species_data)] <- "none"
 
@@ -343,27 +343,21 @@ species_df <- species_data %>%
   ) %>%
   mutate(
     Species = str_replace_all(Species, ",%", "%")
+  ) %>%
+  mutate(
+    Species = ifelse(ID == "2018-0354-BlackX-001" & Species == "alabama moccasinshell%orangenacre mucket%ovate clubshell%upland combshell%triangular kidneyshell%dark pigtoe%plicate rocksnail%black warrior waterdog%flattened musk turtle%rush darter%cahaba shiner%indiana bat%northern long-eared bat", 
+                     "freshwater mussel%dark pigtoe%plicate rocksnail%black warrior waterdog%flattened musk turtle%rush darter%cahaba shiner%indiana bat%northern long-eared bat", Species),
+    Species = ifelse(ID == "2008-2008-Ctr.fX-013" & Species == "cauca guan%cantabrian capercaillie%gorgeted wood-quail%takahe%chatham island oystercatcher%marquesan imperial-pigeon%orange-fronted parakeet%uvea parakeet%southeastern rufous-vented ground cuckoo%chilean woodstar%margaretta's hermit%okinawa woodpecker%black-hooded antwren%fringe-backed fire-eye%st. lucia forest thrush%eiao polynesian warbler%codfish island fernbird%gizo white-eye%cherry-throated tanager%lord howe currawong%junin flightless grebe%greater adjutant stork%andean flamingo%brazilian merganser%southern helmeted curassow%blue-billed curassow%bogota rail%junin rail%jerdon's courser%slender-billed curlew%salmon-crested cockatoo%blue-throated macaw%black-breasted puffleg%esmeraldas woodstar%yellow-browed toucanet%helmeted woodpecker%royal cinclodes%white-browed tit-spinetail%brown-banded antpitta%brasilia tapaculo%kaempfer's tody-tyrant%ash-breasted tit-tyrant%peruvian plantcutter%medium tree-finch%black-backed tanager%harris' mimic swallowtail%jamaican kite swallowtail%fluminese swallowtail%hahnel's amazonian swallowtail%kaiser-i-hind swallowtail%fiji petrel%chatham petrel%cook's petrel%galapagos petrel%magenta petrel%heinroth's shearwater", 
+                     "butterflies%birds%seabirds%neotropical birds%flamingo%wading birds%grebe%grouse%parakeets%curassows%quail%flightless birds%pigeon%warbler%passerine birds", Species),
+    Species = ifelse(ID == "2014-010F-Massac-001" & Species == "georges bank cod%gulf of maine cod%georges bank haddock%gulf of maine haddock%georges bank yellowtail flounder%southern new england/mid-atlantic yellowtail flounder%cape cod/gulf of maine yellowtail flounder%american plaice%witch flounder%georges bank winter flounder%gulf of maine winter flounder%southern new england/mid-atlantic winter flounder%redfish%white hake%pollock%northern windowpane flounder%southern windowpane flounder%ocean pout%atlantic halibut%atlantic wolffish",
+                     "cod%haddock%yellowtail flounder%american plaice%witch flounder%winter flounder%redfish%white hake%pollock%windowpane flounder%ocean pout%atlantic halibut%atlantic wolffish", Species),
+    Species = ifelse(ID == "2011-0808-InDefX-001" & Species == "no", "none", Species),
+    Species = ifelse(ID == "1999-1999-FERCvX-001" & Species == "no", "none", Species),
+    Species = ifelse(ID == "1989-1989-Whiten-001" & Species == "no", "none", Species),
+    Species = ifelse(ID == "2009-0643-SouthX-001" & Species == "no", "none", Species),
+    Species = ifelse(ID == "1999-044F-DelWeX-001" & Species == "no", "none", Species),
+    Species = ifelse(ID == "2019-2019-Standi-001" & Species == "no", "none", Species)
   )
-
-species_df$Species [4938] <-
-  "freshwater mussel%dark pigtoe%plicate rocksnail%black warrior waterdog%flattened musk turtle%rush darter%cahaba shiner%indiana bat%northern long-eared bat"
-
-species_df$Species [728] <- 
-  "butterflies%birds%seabirds%neotropical birds%flamingo%wading birds%grebe%grouse%parakeets%curassows%quail%flightless birds%pigeon%warbler%passerine birds"
-
-species_df$Species [5856] <- "cod%haddock%yellowtail flounder%american plaice%witch flounder%winter flounder%redfish%white hake%pollock%windowpane flounder%ocean pout%atlantic halibut%atlantic wolffish"
-
-species_df$Species [5919] <- "none"
-
-species_df$Species [5921] <- "none"
-
-species_df$Species [5922] <- "none"
-
-species_df$Species [5924] <- "none"
-
-species_df$Species [6155] <- "none"
-
-species_df$Species [6224] <- "none"
 
 ##separating by % so I can code for flora, fauna, and ecosystem
 
