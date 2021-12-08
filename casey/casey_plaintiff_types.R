@@ -11,7 +11,7 @@ data <- read_csv("cases_coded_prelim_clean1.csv")
 
 #create plaintiff type dataframe
 
-data_plaintiff_type <- data %>%
+data_plaintiff_type <- data
 
 #make blanks none
 
@@ -74,5 +74,14 @@ data_plaintiff_type[is.na(data_plaintiff_type)] <- "none"
   
   
 # plaintiff_type_df should be fully cleaned now! 
+  
+#create final dataframe and rename column for binding data
+  
+plaintiff_types_df_c <- plaintiff_type_df %>%
+    select(
+      `ID`, `Plaintiff Types`
+    ) %>%
+    rename(
+      `Plaintiff Types_c` = `Plaintiff Types`)
   
   

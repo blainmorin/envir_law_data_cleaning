@@ -17,7 +17,7 @@ data_pt_dt <- data
   
 data_pt_dt[is.na(data_pt_dt)] <- "none"  
 
-#clean plaintiff type
+#clean plaintiff type and defendant type
 
 clean_pt_dt <- data_pt_dt %>%
   mutate(
@@ -151,6 +151,11 @@ pt_dt_by_type$dt_public_org <- ifelse(grepl("public_org",pt_dt_by_type$`Defendan
 pt_dt_by_type$dt_religious_org <- ifelse(grepl("religious_org",pt_dt_by_type$`Defendant Types`, ignore.case = T),"1","0")
 pt_dt_by_type$dt_other <- ifelse(grepl("other",pt_dt_by_type$`Defendant Types`, ignore.case = T),"1","0")
 
+#create final dataframe and rename column for binding data
 
-
-
+pt_dt_by_type_c <- pt_dt_by_type %>%
+  select(
+    `ID`, 
+    `pt_fed`, `pt_state`, `pt_local`, `pt_military`, `pt_civic_assn`, `pt_ngo`, `pt_union`,`pt_individual`, `pt_industry`, `pt_trade_assn`, `pt_tribe`, `pt_public_org`, `pt_religious_org`, `pt_other`,
+    `dt_fed`, `dt_state`, `dt_local`, `dt_military`, `dt_civic_assn`, `dt_ngo`, `dt_union`,`dt_individual`, `dt_industry`, `dt_trade_assn`, `dt_tribe`, `dt_public_org`, `dt_religious_org`, `dt_other`
+  )

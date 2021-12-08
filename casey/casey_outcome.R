@@ -11,7 +11,7 @@ data <- read_csv("cases_coded_prelim_clean1.csv")
 
 #create outcome dataframe and arrange to see unique values
 
-data_outcome <- data %>%
+data_outcome <- data
 
 #make blanks none
 
@@ -45,3 +45,12 @@ outcome_df <- data_outcome %>%
   )
     
 #outcome is cleaned
+
+#create final dataframe and rename column for binding data
+
+outcome_df_c <- outcome_df %>%
+  select(
+    `ID`, `Outcome`
+  ) %>%
+  rename(
+    `Outcome_c` = `Outcome`)

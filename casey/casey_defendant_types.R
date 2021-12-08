@@ -11,7 +11,7 @@ data <- read_csv("cases_coded_prelim_clean1.csv")
 
 #create defendant type dataframe and arrange to see unique values
 
-data_defendant_type <- data %>%
+data_defendant_type <- data
 
 #make blanks none
 
@@ -63,3 +63,14 @@ defendant_type_df <- data_defendant_type %>%
   )
 
 #defendant types are now cleaned
+
+#create final dataframe and rename column for binding data
+
+defendant_types_df_c <- defendant_type_df %>%
+  select(
+    `ID`, `Defendant Types`
+    ) %>%
+  rename(
+    `Defendant Types_c` = `Defendant Types`)
+
+
