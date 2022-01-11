@@ -455,7 +455,7 @@ ecosystem <- c("aspen stands", "old growth forest dependent species", "coral ree
 
 df_species <- sep_df %>%
   mutate(
-    Fauna_Mentioned = case_when(
+    Fauna_Mentioned_c = case_when(
       `col 1` %in% fauna ~ "yes", 
       `col 2` %in% fauna ~ "yes",
       `col 3` %in% fauna ~ "yes",
@@ -476,7 +476,7 @@ df_species <- sep_df %>%
       `col 18` %in% fauna ~ "yes",
       `col 19` %in% fauna ~ "yes",
       `col 20` %in% fauna ~ "yes"),
-    Flora_Mentioned = case_when(
+    Flora_Mentioned_c = case_when(
       `col 1` %in% flora ~ "yes", 
       `col 2` %in% flora ~ "yes",
       `col 3` %in% flora ~ "yes",
@@ -497,7 +497,7 @@ df_species <- sep_df %>%
       `col 18` %in% flora ~ "yes",
       `col 19` %in% flora ~ "yes",
       `col 20` %in% flora ~ "yes"),
-    Ecosystem_Mentioned = case_when(
+    Ecosystem_Mentioned_c = case_when(
       `col 1` %in% ecosystem ~ "yes", 
       `col 2` %in% ecosystem ~ "yes",
       `col 3` %in% ecosystem ~ "yes",
@@ -521,7 +521,13 @@ df_species <- sep_df %>%
   )
 
 species.df <- df_species %>%
-  select(Species, Fauna_Mentioned, Flora_Mentioned, Ecosystem_Mentioned)
+  select(Species, Fauna_Mentioned_c, Flora_Mentioned_c, Ecosystem_Mentioned_c)
 
 species.df[is.na(species.df)] <- "none"
+
+##renaming columns for data binding
+##final dataframe
+
+species.df_c <- species.df %>%
+  rename(Species_c = Species)
 
