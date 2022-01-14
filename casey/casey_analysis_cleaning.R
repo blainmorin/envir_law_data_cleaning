@@ -17,7 +17,7 @@ data_pt_dt <- data
   
 data_pt_dt[is.na(data_pt_dt)] <- "none"  
 
-#clean plaintiff type and defendant type
+###clean plaintiff type and defendant type
 
 clean_pt_dt <- data_pt_dt %>%
   mutate(
