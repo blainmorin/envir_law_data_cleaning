@@ -146,4 +146,10 @@ states_df <- states_data %>%
     `Location (state) of conflict` = ifelse(ID == "1998-1998-Americ-003" & `Location (state) of conflict` == "carolina", "north carolina", `Location (state) of conflict`)
   )
 
+##renaming columns for data binding
+##final dataframe
+
+states_df_c <- states_df%>%
+  rename(`Location (state) of conflict_c` = `Location (state) of conflict`)
+
 
