@@ -17,6 +17,7 @@ data_clean <- data
 
 data_clean[is.na(data_clean)] <- "none"  
 
+<<<<<<< HEAD
 ### clean data for data_clean
 
 ### outcome to data_clean --------
@@ -45,7 +46,35 @@ data_clean %>%
     `Outcome` = str_replace_all(`Outcome`,"mixed\\?","mixed")
   )
 ### plaintiff type and defendant type to data_clean ---------
+=======
+### clean data for data_clean -------------------------------
+### outcome to data_clean --------
+>>>>>>> 1282bcee8cc2bf00fe1170e0416242a251560d2c
 data_clean %>%
+  mutate(
+    `Outcome` = str_replace_all(`Outcome`,"insurance cost","plaintiff"),
+    `Outcome` = str_replace_all(`Outcome`,"environmental nature is second at best","none"),
+    `Outcome` = str_replace_all(`Outcome`,"plaitiff","plaintiff"),
+    `Outcome` = str_replace_all(`Outcome`,"plaintiffs","plaintiff"),
+    `Outcome` = str_replace_all(`Outcome`,"plaintifff","plaintiff"),
+    `Outcome` = str_replace_all(`Outcome`,"plaintff","plaintiff"),
+    `Outcome` = str_replace_all(`Outcome`,"plainitff","plaintiff"),
+    `Outcome` = str_replace_all(`Outcome`,"defenfant","defendant"),
+    `Outcome` = str_replace_all(`Outcome`,"defendent","defendant"),
+    `Outcome` = str_replace_all(`Outcome`,"defendants","defendant"),
+    `Outcome` = str_replace_all(`Outcome`,"defenant","defendant"),
+    `Outcome` = str_replace_all(`Outcome`,"defedant","defendant"),
+    `Outcome` = str_replace_all(`Outcome`,"denied","defendant"),
+    `Outcome` = str_replace_all(`Outcome`,"unsure","unknown"),
+    `Outcome` = str_replace_all(`Outcome`,"unclear","unknown"),
+    `Outcome` = str_replace_all(`Outcome`,"industry%individual","mixed"),
+    `Outcome` = str_replace_all(`Outcome`,"neither all motions denied","mixed"),
+    `Outcome` = str_replace_all(`Outcome`,"neither all motions defendant","mixed"),
+    `Outcome` = str_replace_all(`Outcome`,"neither","mixed"),
+    `Outcome` = str_replace_all(`Outcome`,"neither\\?","mixed"),
+    `Outcome` = str_replace_all(`Outcome`,"mixed\\?","mixed")
+  ) %>%
+### plaintiff type and defendant type to data_clean ---------
   mutate(
     `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"u.s. department of labor federal credit union","fed"),
     `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"unclear","other"),
@@ -137,9 +166,14 @@ data_clean %>%
     `Defendant Types` = str_replace_all(`Defendant Types`,"county","local"),
     `Defendant Types` = str_replace_all(`Defendant Types`,"seek damages","fed"),
     `Defendant Types` = str_replace_all(`Defendant Types`,"sought recovery costs for damages","local")
+<<<<<<< HEAD
   )
 ### agencies to data_clean ------
 data_clean %>%  
+=======
+  ) %>%
+### agencies to data_clean ------
+>>>>>>> 1282bcee8cc2bf00fe1170e0416242a251560d2c
   mutate(
   `Federal Agencies` = str_replace_all(`Federal Agencies`, "animal and plant health inspection services", "aphis"),
   `Federal Agencies` = str_replace_all(`Federal Agencies`, "animal and plant health inspection service", "aphis")
@@ -269,9 +303,14 @@ data_clean %>%
   ) %>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "national park service", "nps"),
+<<<<<<< HEAD
   )
 ### statutes to data_clean ---------------
 data_clean %>%
+=======
+  ) %>%
+### statutes to data_clean ---------------
+>>>>>>> 1282bcee8cc2bf00fe1170e0416242a251560d2c
   mutate(
   ### solid waste disposal act
   `Federal Statutes` = str_replace_all(`Federal Statutes`, "soild waste disposal act", "solid waste disposal act"),
@@ -475,9 +514,14 @@ data_clean %>%
   ### none
   `Federal Statutes` = str_replace_all(`Federal Statutes`, "\\bnon\\b", "none"),
   
+<<<<<<< HEAD
 )
 ### states to data_clean --------------
 data_clean %>%
+=======
+) %>%
+### states to data_clean --------------
+>>>>>>> 1282bcee8cc2bf00fe1170e0416242a251560d2c
   mutate(
   `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "dc", "district of columbia"),
   `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "d.c.", "district of columbia"),
@@ -610,9 +654,12 @@ data_clean %>%
     `Location (state) of conflict` = ifelse(ID == "2017-0257-N.D.eX-001" & `Location (state) of conflict` == "dakota", "north dakota", `Location (state) of conflict`),
     `Location (state) of conflict` = ifelse(ID == "1976-0415-Maryla-001" & `Location (state) of conflict` == "northeast", "new jersey%pennsylvania", `Location (state) of conflict`),
     `Location (state) of conflict` = ifelse(ID == "1998-1998-Americ-003" & `Location (state) of conflict` == "carolina", "north carolina", `Location (state) of conflict`)
-  )
+  ) %>%
 ### species to data_clean ---------
+<<<<<<< HEAD
 data_clean %>%
+=======
+>>>>>>> 1282bcee8cc2bf00fe1170e0416242a251560d2c
   mutate(
     Species = str_replace_all(Species, "grizzly bears", "grizzly bear"),
     Species = str_replace_all(Species, "grizzlies", "grizzly bear"),
@@ -959,9 +1006,14 @@ data_clean %>%
     Species = ifelse(ID == "2009-0643-SouthX-001" & Species == "no", "none", Species),
     Species = ifelse(ID == "1999-044F-DelWeX-001" & Species == "no", "none", Species),
     Species = ifelse(ID == "2019-2019-Standi-001" & Species == "no", "none", Species)
+<<<<<<< HEAD
   )
 ### non-environmental ton to data_clean -----
 data_clean %>%
+=======
+  ) %>%
+### non-environmental ton to data_clean -----
+>>>>>>> 1282bcee8cc2bf00fe1170e0416242a251560d2c
   mutate(
     `Type of Nature` = str_replace_all(`Type of Nature`,"non-envrionmental","non-environmental"),
     `Type of Nature` = str_replace_all(`Type of Nature`,"non-environemntal","non-environmental"),
