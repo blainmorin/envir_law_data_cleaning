@@ -17,8 +17,33 @@ data_clean <- data
 
 data_clean[is.na(data_clean)] <- "none"  
 
-### clean data for data_clean -------------------------------
+### clean data for data_clean
 
+### outcome to data_clean --------
+data_clean %>%
+  mutate(
+    `Outcome` = str_replace_all(`Outcome`,"insurance cost","plaintiff"),
+    `Outcome` = str_replace_all(`Outcome`,"environmental nature is second at best","none"),
+    `Outcome` = str_replace_all(`Outcome`,"plaitiff","plaintiff"),
+    `Outcome` = str_replace_all(`Outcome`,"plaintiffs","plaintiff"),
+    `Outcome` = str_replace_all(`Outcome`,"plaintifff","plaintiff"),
+    `Outcome` = str_replace_all(`Outcome`,"plaintff","plaintiff"),
+    `Outcome` = str_replace_all(`Outcome`,"plainitff","plaintiff"),
+    `Outcome` = str_replace_all(`Outcome`,"defenfant","defendant"),
+    `Outcome` = str_replace_all(`Outcome`,"defendent","defendant"),
+    `Outcome` = str_replace_all(`Outcome`,"defendants","defendant"),
+    `Outcome` = str_replace_all(`Outcome`,"defenant","defendant"),
+    `Outcome` = str_replace_all(`Outcome`,"defedant","defendant"),
+    `Outcome` = str_replace_all(`Outcome`,"denied","defendant"),
+    `Outcome` = str_replace_all(`Outcome`,"unsure","unknown"),
+    `Outcome` = str_replace_all(`Outcome`,"unclear","unknown"),
+    `Outcome` = str_replace_all(`Outcome`,"industry%individual","mixed"),
+    `Outcome` = str_replace_all(`Outcome`,"neither all motions denied","mixed"),
+    `Outcome` = str_replace_all(`Outcome`,"neither all motions defendant","mixed"),
+    `Outcome` = str_replace_all(`Outcome`,"neither","mixed"),
+    `Outcome` = str_replace_all(`Outcome`,"neither\\?","mixed"),
+    `Outcome` = str_replace_all(`Outcome`,"mixed\\?","mixed")
+  )
 ### plaintiff type and defendant type to data_clean ---------
 data_clean %>%
   mutate(
@@ -113,37 +138,8 @@ data_clean %>%
     `Defendant Types` = str_replace_all(`Defendant Types`,"seek damages","fed"),
     `Defendant Types` = str_replace_all(`Defendant Types`,"sought recovery costs for damages","local")
   )
-
-### outcome to data_clean --------
-data_clean %>%
-  mutate(
-    `Outcome` = str_replace_all(`Outcome`,"insurance cost","plaintiff"),
-    `Outcome` = str_replace_all(`Outcome`,"environmental nature is second at best","none"),
-    `Outcome` = str_replace_all(`Outcome`,"plaitiff","plaintiff"),
-    `Outcome` = str_replace_all(`Outcome`,"plaintiffs","plaintiff"),
-    `Outcome` = str_replace_all(`Outcome`,"plaintifff","plaintiff"),
-    `Outcome` = str_replace_all(`Outcome`,"plaintff","plaintiff"),
-    `Outcome` = str_replace_all(`Outcome`,"plainitff","plaintiff"),
-    `Outcome` = str_replace_all(`Outcome`,"defenfant","defendant"),
-    `Outcome` = str_replace_all(`Outcome`,"defendent","defendant"),
-    `Outcome` = str_replace_all(`Outcome`,"defendants","defendant"),
-    `Outcome` = str_replace_all(`Outcome`,"defenant","defendant"),
-    `Outcome` = str_replace_all(`Outcome`,"defedant","defendant"),
-    `Outcome` = str_replace_all(`Outcome`,"denied","defendant"),
-    `Outcome` = str_replace_all(`Outcome`,"unsure","unknown"),
-    `Outcome` = str_replace_all(`Outcome`,"unclear","unknown"),
-    `Outcome` = str_replace_all(`Outcome`,"industry%individual","mixed"),
-    `Outcome` = str_replace_all(`Outcome`,"neither all motions denied","mixed"),
-    `Outcome` = str_replace_all(`Outcome`,"neither all motions defendant","mixed"),
-    `Outcome` = str_replace_all(`Outcome`,"neither","mixed"),
-    `Outcome` = str_replace_all(`Outcome`,"neither\\?","mixed"),
-    `Outcome` = str_replace_all(`Outcome`,"mixed\\?","mixed")
-  )
-
-
 ### agencies to data_clean ------
-
-data_clean %>%
+data_clean %>%  
   mutate(
   `Federal Agencies` = str_replace_all(`Federal Agencies`, "animal and plant health inspection services", "aphis"),
   `Federal Agencies` = str_replace_all(`Federal Agencies`, "animal and plant health inspection service", "aphis")
@@ -274,9 +270,7 @@ data_clean %>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "national park service", "nps"),
   )
-
 ### statutes to data_clean ---------------
-
 data_clean %>%
   mutate(
   ### solid waste disposal act
@@ -482,11 +476,7 @@ data_clean %>%
   `Federal Statutes` = str_replace_all(`Federal Statutes`, "\\bnon\\b", "none"),
   
 )
-
-
-
 ### states to data_clean --------------
-
 data_clean %>%
   mutate(
   `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "dc", "district of columbia"),
@@ -622,7 +612,6 @@ data_clean %>%
     `Location (state) of conflict` = ifelse(ID == "1998-1998-Americ-003" & `Location (state) of conflict` == "carolina", "north carolina", `Location (state) of conflict`)
   )
 ### species to data_clean ---------
-
 data_clean %>%
   mutate(
     Species = str_replace_all(Species, "grizzly bears", "grizzly bear"),
@@ -971,11 +960,7 @@ data_clean %>%
     Species = ifelse(ID == "1999-044F-DelWeX-001" & Species == "no", "none", Species),
     Species = ifelse(ID == "2019-2019-Standi-001" & Species == "no", "none", Species)
   )
-
-  
-  
 ### non-environmental ton to data_clean -----
-
 data_clean %>%
   mutate(
     `Type of Nature` = str_replace_all(`Type of Nature`,"non-envrionmental","non-environmental"),
@@ -988,10 +973,9 @@ data_clean %>%
     `Type of Nature` = str_replace_all(`Type of Nature`,"non-enironmental","non-environmental")
   )
 
-
 ### plaintiff and defendant type with 0 and 1  -------------------------------
 
-#split pt into columns by type, 1 if type is contained, 0 if not
+#split plaintiff types into columns by type, 1 if type is contained, 0 if not
 
 data_clean$pt_fed <- ifelse(grepl("fed",data_clean$`Plaintiff Types`, ignore.case = T),"1","0")
 data_clean$pt_state <- ifelse(grepl("state",data_clean$`Plaintiff Types`, ignore.case = T),"1","0")
@@ -1008,7 +992,7 @@ data_clean$pt_public_org <- ifelse(grepl("public_org",data_clean$`Plaintiff Type
 data_clean$pt_religious_org <- ifelse(grepl("religious_org",data_clean$`Plaintiff Types`, ignore.case = T),"1","0")
 data_clean$pt_other <- ifelse(grepl("other",data_clean$`Plaintiff Types`, ignore.case = T),"1","0")
 
-#split dt into columns by type, 1 if type is contained, 0 if not
+#split defendant types into columns by type, 1 if type is contained, 0 if not
 
 data_clean$dt_fed <- ifelse(grepl("fed",data_clean$`Defendant Types`, ignore.case = T),"1","0")
 data_clean$dt_state <- ifelse(grepl("state",data_clean$`Defendant Types`, ignore.case = T),"1","0")
@@ -1025,14 +1009,9 @@ data_clean$dt_public_org <- ifelse(grepl("public_org",data_clean$`Defendant Type
 data_clean$dt_religious_org <- ifelse(grepl("religious_org",data_clean$`Defendant Types`, ignore.case = T),"1","0")
 data_clean$dt_other <- ifelse(grepl("other",data_clean$`Defendant Types`, ignore.case = T),"1","0")
 
-
-
-
-
 ### delete non-environmental cases from data -------------
 
 data_clean_no_non <- subset(data_clean,`Type of Nature`!="non-environmental" & `Type of Nature`!="none")
-
 
 ### export data ---------
 
