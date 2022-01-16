@@ -1,4 +1,4 @@
-### installing packages, create data_clean --------------------------------
+### installing packages, create data_clean -----
 
 #packages
 
@@ -11,46 +11,17 @@ data <- read_csv("cases_coded_prelim_clean1.csv")
 
 #create new df
 
-data_clean <- data
+df_to_clean <- data
 
 #make blanks none
 
-data_clean[is.na(data_clean)] <- "none"  
+df_to_clean[is.na(df_to_clean)] <- "none"  
 
-<<<<<<< HEAD
-### clean data for data_clean
+### clean data for data_clean -------
 
-### outcome to data_clean --------
-data_clean %>%
-  mutate(
-    `Outcome` = str_replace_all(`Outcome`,"insurance cost","plaintiff"),
-    `Outcome` = str_replace_all(`Outcome`,"environmental nature is second at best","none"),
-    `Outcome` = str_replace_all(`Outcome`,"plaitiff","plaintiff"),
-    `Outcome` = str_replace_all(`Outcome`,"plaintiffs","plaintiff"),
-    `Outcome` = str_replace_all(`Outcome`,"plaintifff","plaintiff"),
-    `Outcome` = str_replace_all(`Outcome`,"plaintff","plaintiff"),
-    `Outcome` = str_replace_all(`Outcome`,"plainitff","plaintiff"),
-    `Outcome` = str_replace_all(`Outcome`,"defenfant","defendant"),
-    `Outcome` = str_replace_all(`Outcome`,"defendent","defendant"),
-    `Outcome` = str_replace_all(`Outcome`,"defendants","defendant"),
-    `Outcome` = str_replace_all(`Outcome`,"defenant","defendant"),
-    `Outcome` = str_replace_all(`Outcome`,"defedant","defendant"),
-    `Outcome` = str_replace_all(`Outcome`,"denied","defendant"),
-    `Outcome` = str_replace_all(`Outcome`,"unsure","unknown"),
-    `Outcome` = str_replace_all(`Outcome`,"unclear","unknown"),
-    `Outcome` = str_replace_all(`Outcome`,"industry%individual","mixed"),
-    `Outcome` = str_replace_all(`Outcome`,"neither all motions denied","mixed"),
-    `Outcome` = str_replace_all(`Outcome`,"neither all motions defendant","mixed"),
-    `Outcome` = str_replace_all(`Outcome`,"neither","mixed"),
-    `Outcome` = str_replace_all(`Outcome`,"neither\\?","mixed"),
-    `Outcome` = str_replace_all(`Outcome`,"mixed\\?","mixed")
-  )
-### plaintiff type and defendant type to data_clean ---------
-=======
-### clean data for data_clean -------------------------------
-### outcome to data_clean --------
->>>>>>> 1282bcee8cc2bf00fe1170e0416242a251560d2c
-data_clean %>%
+data_clean <- df_to_clean %>%
+  
+  ### outcome to data_clean ---------
   mutate(
     `Outcome` = str_replace_all(`Outcome`,"insurance cost","plaintiff"),
     `Outcome` = str_replace_all(`Outcome`,"environmental nature is second at best","none"),
@@ -74,7 +45,7 @@ data_clean %>%
     `Outcome` = str_replace_all(`Outcome`,"neither\\?","mixed"),
     `Outcome` = str_replace_all(`Outcome`,"mixed\\?","mixed")
   ) %>%
-### plaintiff type and defendant type to data_clean ---------
+  ### plaintiff type and defendant type to data_clean ---------
   mutate(
     `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"u.s. department of labor federal credit union","fed"),
     `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"unclear","other"),
@@ -166,14 +137,8 @@ data_clean %>%
     `Defendant Types` = str_replace_all(`Defendant Types`,"county","local"),
     `Defendant Types` = str_replace_all(`Defendant Types`,"seek damages","fed"),
     `Defendant Types` = str_replace_all(`Defendant Types`,"sought recovery costs for damages","local")
-<<<<<<< HEAD
-  )
-### agencies to data_clean ------
-data_clean %>%  
-=======
   ) %>%
-### agencies to data_clean ------
->>>>>>> 1282bcee8cc2bf00fe1170e0416242a251560d2c
+  ### agencies to data_clean ---------
   mutate(
   `Federal Agencies` = str_replace_all(`Federal Agencies`, "animal and plant health inspection services", "aphis"),
   `Federal Agencies` = str_replace_all(`Federal Agencies`, "animal and plant health inspection service", "aphis")
@@ -303,14 +268,8 @@ data_clean %>%
   ) %>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "national park service", "nps"),
-<<<<<<< HEAD
-  )
-### statutes to data_clean ---------------
-data_clean %>%
-=======
   ) %>%
-### statutes to data_clean ---------------
->>>>>>> 1282bcee8cc2bf00fe1170e0416242a251560d2c
+  ### statutes to data_clean -----------
   mutate(
   ### solid waste disposal act
   `Federal Statutes` = str_replace_all(`Federal Statutes`, "soild waste disposal act", "solid waste disposal act"),
@@ -403,11 +362,11 @@ data_clean %>%
   ### toxic substances control act
   `Federal Statutes` = str_replace_all(`Federal Statutes`, "toxic substance control act", "tsca"),
   ### safe water drinking act
-  `Federal Statutes` = str_replace_all(`Federal Statutes`, "safe water drinking program", "sdwa"),
-  `Federal Statutes` = str_replace_all(`Federal Statutes`, "safe drinking water act", "sdwa"),
-  `Federal Statutes` = str_replace_all(`Federal Statutes`, "safe drinking water", "sdwa"),
-  `Federal Statutes` = str_replace_all(`Federal Statutes`, "safe water drinking act", "sdwa"),
-  `Federal Statutes` = str_replace_all(`Federal Statutes`, "safe drinking act", "sdwa"),
+  `Federal Statutes` = str_replace_all(`Federal Statutes`, "safe water drinking program", "swda"),
+  `Federal Statutes` = str_replace_all(`Federal Statutes`, "safe drinking water act", "swda"),
+  `Federal Statutes` = str_replace_all(`Federal Statutes`, "safe drinking water", "swda"),
+  `Federal Statutes` = str_replace_all(`Federal Statutes`, "safe water drinking act", "swda"),
+  `Federal Statutes` = str_replace_all(`Federal Statutes`, "safe drinking act", "swda"),
   ### federal land policy and management act
   `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal land policy management act", "flpma"),
   `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal land policy and management act", "flpma"),
@@ -513,15 +472,8 @@ data_clean %>%
   
   ### none
   `Federal Statutes` = str_replace_all(`Federal Statutes`, "\\bnon\\b", "none"),
-  
-<<<<<<< HEAD
-)
-### states to data_clean --------------
-data_clean %>%
-=======
 ) %>%
-### states to data_clean --------------
->>>>>>> 1282bcee8cc2bf00fe1170e0416242a251560d2c
+  ### states to data_clean ----------
   mutate(
   `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "dc", "district of columbia"),
   `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "d.c.", "district of columbia"),
@@ -655,11 +607,7 @@ data_clean %>%
     `Location (state) of conflict` = ifelse(ID == "1976-0415-Maryla-001" & `Location (state) of conflict` == "northeast", "new jersey%pennsylvania", `Location (state) of conflict`),
     `Location (state) of conflict` = ifelse(ID == "1998-1998-Americ-003" & `Location (state) of conflict` == "carolina", "north carolina", `Location (state) of conflict`)
   ) %>%
-### species to data_clean ---------
-<<<<<<< HEAD
-data_clean %>%
-=======
->>>>>>> 1282bcee8cc2bf00fe1170e0416242a251560d2c
+  ### species to data_clean ---------
   mutate(
     Species = str_replace_all(Species, "grizzly bears", "grizzly bear"),
     Species = str_replace_all(Species, "grizzlies", "grizzly bear"),
@@ -1006,14 +954,8 @@ data_clean %>%
     Species = ifelse(ID == "2009-0643-SouthX-001" & Species == "no", "none", Species),
     Species = ifelse(ID == "1999-044F-DelWeX-001" & Species == "no", "none", Species),
     Species = ifelse(ID == "2019-2019-Standi-001" & Species == "no", "none", Species)
-<<<<<<< HEAD
-  )
-### non-environmental ton to data_clean -----
-data_clean %>%
-=======
   ) %>%
-### non-environmental ton to data_clean -----
->>>>>>> 1282bcee8cc2bf00fe1170e0416242a251560d2c
+  ### non-environmental ton to data_clean -------------
   mutate(
     `Type of Nature` = str_replace_all(`Type of Nature`,"non-envrionmental","non-environmental"),
     `Type of Nature` = str_replace_all(`Type of Nature`,"non-environemntal","non-environmental"),
@@ -1025,7 +967,9 @@ data_clean %>%
     `Type of Nature` = str_replace_all(`Type of Nature`,"non-enironmental","non-environmental")
   )
 
-### plaintiff and defendant type with 0 and 1  -------------------------------
+
+### add columns for analysis with 0 and 1 --------
+  ### plaintiff and defendant type with 0 and 1 -----------
 
 #split plaintiff types into columns by type, 1 if type is contained, 0 if not
 
@@ -1061,10 +1005,80 @@ data_clean$dt_public_org <- ifelse(grepl("public_org",data_clean$`Defendant Type
 data_clean$dt_religious_org <- ifelse(grepl("religious_org",data_clean$`Defendant Types`, ignore.case = T),"1","0")
 data_clean$dt_other <- ifelse(grepl("other",data_clean$`Defendant Types`, ignore.case = T),"1","0")
 
-### delete non-environmental cases from data -------------
+
+  ### agency with 0 and 1 --------
+data_clean$fa_aphis <- ifelse(grepl("aphis",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_arc <- ifelse(grepl("arc",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_aec <- ifelse(grepl("aec",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_acoe <- ifelse(grepl("acoe",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_blm <- ifelse(grepl("blm",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_bif <- ifelse(grepl("bif",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_bor <- ifelse(grepl("bor",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_boem <- ifelse(grepl("boem",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_bsee <- ifelse(grepl("bsee",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_epa <- ifelse(grepl("epa",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_fda <- ifelse(grepl("fda",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_faa <- ifelse(grepl("faa",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_fha <- ifelse(grepl("fha",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_fhfa <- ifelse(grepl("fhfa",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_fta <- ifelse(grepl("fta",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_fs <- ifelse(grepl("fs",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_fws <- ifelse(grepl("fws",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_gsa <- ifelse(grepl("gsa",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_nasa <- ifelse(grepl("nasa",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_nmfs <- ifelse(grepl("nmfs",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_noaa <- ifelse(grepl("noaa",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_npa <- ifelse(grepl("nps",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+
+  ### statues with 0 and 1 ------
+data_clean$statutes_solidwaste <- ifelse(grepl("solid waste disposal act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_fwpca <- ifelse(grepl("fwpca",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_cwa <- ifelse(grepl("cwa",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_caa <- ifelse(grepl("caa",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_cercla <- ifelse(grepl("cercla",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_nepa <- ifelse(grepl("nepa",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_esa <- ifelse(grepl("esa",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_ffdca <- ifelse(grepl("ffdca",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_rcra <- ifelse(grepl("rcra",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_nfma <- ifelse(grepl("nfma",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_fifra <- ifelse(grepl("fifra",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_aea <- ifelse(grepl("aea",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_reclamationact <- ifelse(grepl("reclamation act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_riversandharbors <- ifelse(grepl("rivers and harbors act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_tsca <- ifelse(grepl("tsca",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_swda <- ifelse(grepl("swda",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_flpma <- ifelse(grepl("flpma",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_opa <- ifelse(grepl("opa",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_smcra <- ifelse(grepl("smcra",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_wildernessact <- ifelse(grepl("wilderness act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_mbta <- ifelse(grepl("mbta",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_mmpa <- ifelse(grepl("mmpa",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_czma <- ifelse(grepl("czma",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_energypolicyact <- ifelse(grepl("energy policy act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_msa <- ifelse(grepl("msa",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_epcra <- ifelse(grepl("epcra",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_mprsa <- ifelse(grepl("mprsa",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_ocean <- ifelse(grepl("ocean dumping act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_multipleuse <- ifelse(grepl("the multiple use sustained yield act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_nca <- ifelse(grepl("nca",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_fwca <- ifelse(grepl("fwca",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_nwpa <- ifelse(grepl("nwpa",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_nationalpsoa <- ifelse(grepl("national park service organic act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_eisa <- ifelse(grepl("eisa",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_fishandwildlifeact <- ifelse(grepl("fish and wildlife act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_ppa <- ifelse(grepl("ppa",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_antiquitiesact <- ifelse(grepl("antiquities act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_fpa <- ifelse(grepl("fpa",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_lacey <- ifelse(grepl("lacey act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_mla <- ifelse(grepl("mla",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_wildandscenic <- ifelse(grepl("wild and scenic rivers act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_organic <- ifelse(grepl("the organic act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+data_clean$statutes_none <- ifelse(grepl("none",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+
+### delete non-environmental cases from data --------
 
 data_clean_no_non <- subset(data_clean,`Type of Nature`!="non-environmental" & `Type of Nature`!="none")
 
-### export data ---------
+### export data --------
 
-write.csv(data_clean_no_non,"/Users/caseyr/Documents/School/OSU/Rea Environmental Law/Capstone/data_clean_no_non.csv", row.names = FALSE)
+write.csv(data_clean_no_non,"/Users/caseyr/Documents/School/OSU/Rea Environmental Law/Capstone/data_clean_no_non_w_analysis.csv", row.names = FALSE)
