@@ -151,6 +151,7 @@ data_fed_agency <- data %>%
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "federal drug administration", "fda"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "food & drug administration", "fda"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "u.s. fmsa", "fda"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "bureau of drug abuse control", "fda"),
   ) %>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "federal aviation administration", "faa"),
@@ -176,6 +177,7 @@ data_fed_agency <- data %>%
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "federal transit administration", "fta"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "fedreral transit administration", "fta"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "federal transit authority", "fta"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "urban mass transportation administration", "fta"),
   ) %>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "us forest service", "fs"),
@@ -234,6 +236,8 @@ data_fed_agency <- data %>%
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "national marine fishieres service", "nmfs"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "national marine and fisheries service", "nmfs"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "national marine fisheries", "nmfs"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "nmfs's", "nmfs"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "nmfsa", "nmfs"),
   ) %>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "national oceanic and atmospheric administration", "noaa"),
@@ -247,6 +251,7 @@ data_fed_agency <- data %>%
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "national park service", "nps"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "national parks association", "nps"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "national wildlife federation", "nps"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "united states park service", "nps"),
   ) %>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "u.s. department of the army", "usa"),
@@ -380,6 +385,17 @@ data_fed_agency <- data %>%
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "securities and exchange commission", "sec"), 
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "veterans administration center", "va"), 
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "united states marshal", "usms"), 
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "urban mass transportation administration", "dot"), 
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "u.s. department of commerce", "doc"), 
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "unknown", "none"), 
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "agency for international develoment", "aid"), 
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "commission of fine arts", "cfa"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "department of agriculture", "usda"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "department of health, education and welfare", "hhs"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "department of homeland security", "dhs"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "department of labor", "dol"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "department of transportation", "dot"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "american battle monuments commission", "abmc"),
   ) %>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "united states department of the interior", "doi"), 
@@ -399,10 +415,6 @@ data_fed_agency <- data %>%
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "& ", "%"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "&", "%"),
   ) 
-  
-
-
-`Federal Agencies` = str_replace_all(`Federal Agencies`, "donkeys\\(wild\\)", "wild donkey")
 
 
 
