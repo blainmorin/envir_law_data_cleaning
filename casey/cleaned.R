@@ -1028,7 +1028,7 @@ data_clean$fa_gsa <- ifelse(grepl("gsa",data_clean$`Federal Agencies`, ignore.ca
 data_clean$fa_nasa <- ifelse(grepl("nasa",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
 data_clean$fa_nmfs <- ifelse(grepl("nmfs",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
 data_clean$fa_noaa <- ifelse(grepl("noaa",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
-data_clean$fa_npa <- ifelse(grepl("nps",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_nps <- ifelse(grepl("nps",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
 
   ### statues with 0 and 1 ------
 data_clean$statutes_solidwaste <- ifelse(grepl("solid waste disposal act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
@@ -1074,6 +1074,7 @@ data_clean$statutes_mla <- ifelse(grepl("mla",data_clean$`Federal Statutes`, ign
 data_clean$statutes_wildandscenic <- ifelse(grepl("wild and scenic rivers act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
 data_clean$statutes_organic <- ifelse(grepl("the organic act",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
 data_clean$statutes_none <- ifelse(grepl("none",data_clean$`Federal Statutes`, ignore.case = T),"1","0")
+
 
 ### delete non-environmental cases from data --------
 
