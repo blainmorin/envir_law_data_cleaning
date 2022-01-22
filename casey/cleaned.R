@@ -252,6 +252,7 @@ data_clean <- df_to_clean %>%
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "food & drug administration", "fda"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "u.s. fmsa", "fda"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "bureau of drug abuse control", "fda"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "fmsa", "fda"),
   ) %>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "united states federal highway administration", "fha"),
@@ -265,6 +266,7 @@ data_clean <- df_to_clean %>%
   ) %>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "federal housing finance agency", "fhfa"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "fhfa;", "fhfa"),
   ) %>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "federal railroad administration", "fra"),
@@ -323,6 +325,7 @@ data_clean <- df_to_clean %>%
   ) %>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "federal home loan mortgage corporation", "fhlmc"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "fhlmc;", "fhlmc"),
     )%>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "united states general service administration", "gsa"),
@@ -505,7 +508,7 @@ data_clean <- df_to_clean %>%
     ) %>%
     mutate(
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "equal employment opportunity commission", "eeoc"),
-    ) %>% #### Oddities ###
+    ) %>% #### Oddities ####
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "farm service agency", "fmsa"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "federal crop insurance corp", "fcic"),
@@ -770,7 +773,9 @@ data_clean <- df_to_clean %>%
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "department of homeland security", "dhs"),
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "department of labor", "dol"),
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "department of transportation", "dot"),
+      `Federal Agencies` = str_replace_all(`Federal Agencies`, "us dot", "dot"), 
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "american battle monuments commission", "abmc"),
+      `Federal Agencies` = str_replace_all(`Federal Agencies`, "delaware river basin", "nps"),
     ) %>%
     mutate(
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "united states department of the interior", "doi"), 
@@ -782,6 +787,13 @@ data_clean <- df_to_clean %>%
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "dept of interios", "doi"), 
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "united states deparement of doi", "doi"), 
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "u.s. doi", "doi"), 
+      `Federal Agencies` = str_replace_all(`Federal Agencies`, "doj\\?", "doj"), 
+      `Federal Agencies` = str_replace_all(`Federal Agencies`, "fws, et al.", "fws"), 
+      `Federal Agencies` = str_replace_all(`Federal Agencies`, "international boundary and water comission of the united states", "dod"),
+      `Federal Agencies` = str_replace_all(`Federal Agencies`, "federal national mortgage association", "none"),
+      `Federal Agencies` = str_replace_all(`Federal Agencies`, "fhfa;", "fhfa"),
+      `Federal Agencies` = str_replace_all(`Federal Agencies`, "fhlmc;", "fhlmc"),
+      `Federal Agencies` = str_replace_all(`Federal Agencies`, "fmsa", "fda"),
     ) %>%
     mutate(
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "% ", "%"),
