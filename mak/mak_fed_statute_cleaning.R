@@ -7,19 +7,8 @@ data <- read_csv("cases_coded_prelim_clean1.csv")
 
 ### Show only Federal Statues
 data_fed_statutes <- data %>%
-  select(
-    `Federal Statutes`
-  ) %>%
-  group_by(
-    `Federal Statutes`
-  ) %>%
-  filter(
-    row_number()== 1
-  ) %>%
-  ungroup() %>%
-  arrange( 
-    desc(`Federal Statutes`)
-  )
+  select(ID, `Federal Statutes`)
+
 ### Temporarily turn blank entries into "none" entries
 
 data_fed_statutes[is.na(data_fed_statutes)] <- "none"
@@ -42,81 +31,81 @@ fed_statutes_sep[is.na(fed_statutes_sep)] <- "none"
 
 ### Get Uniques
 
-uniques <- unique(fed_statutes_sep[c("col 1")])
-
-uniques_add <- unique(fed_statutes_sep[c("col 2")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 3")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 4")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 5")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 6")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 7")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 8")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 9")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 10")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 11")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 12")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 13")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 14")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 15")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 16")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 17")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 18")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques_add <- unique(fed_statutes_sep[c("col 19")])
-colnames(uniques_add) <- "col 1"
-uniques <- rbind(uniques,uniques_add)
-
-uniques <- unique(uniques)
+# uniques <- unique(fed_statutes_sep[c("col 1")])
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 2")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 3")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 4")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 5")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 6")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 7")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 8")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 9")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 10")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 11")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 12")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 13")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 14")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 15")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 16")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 17")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 18")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques_add <- unique(fed_statutes_sep[c("col 19")])
+# colnames(uniques_add) <- "col 1"
+# uniques <- rbind(uniques,uniques_add)
+# 
+# uniques <- unique(uniques)
 
 ### Making replacements
 
@@ -136,13 +125,13 @@ cleaned_fed_statutes <- data_fed_statutes %>%
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "clean water act", "cwa"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "clean water act", "cwa"),
     ### clean air act
-    `Federal Statutes` = str_replace_all(`Federal Statutes`, "clean air act", "caa"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "clean air act of texas", "caa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "clean air act", "caa"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "clean act act", "caa"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "clean act act", "caa"),
     ### cercla/superfund (all cleaned to cercla)
-    `Federal Statutes` = str_replace_all(`Federal Statutes`, "comprehensive environmental response, compensation, and liability act", "cercla"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "comprehensive environmental response, compensation, and liability act of 1980", "cercla"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "comprehensive environmental response, compensation, and liability act", "cercla"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "comprehensive environmental response, compensation and liability act", "cercla"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "comprehensive environmental response compensation and liability act", "cercla"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "comprehensive environmental response and liability act", "cercla"),
@@ -155,29 +144,32 @@ cleaned_fed_statutes <- data_fed_statutes %>%
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "cerlca", "cercla"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "cerla", "cercla"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "cerclar", "cercla"),
+      #account for superfund and cercla in the same cell (if cell contains superfund and cercla delete superfund)
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "cercla & superfund", "cercla"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "cercla$cwa", "cercla"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "superfund act", "cercla"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "superfund", "cercla"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "superfun", "cercla"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "cercla%cercla", "cercla"),
     ### national environmental policy act
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "nepa&national forest management act", "nepa$nfma"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "esa&nepa", "nepa$esa"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "national environmental policy act", "nepa"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "environmental policy act", "nepa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "nepa%nepa", "nepa"),
     ### endangered species act
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "endangered species act", "esa"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "endangered species", "esa"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "endangered  species act", "esa"),
     ### federal food, drug, and cosmetic act/federal food, drug and cosmetic act
-    `Federal Statutes` = str_replace_all(`Federal Statutes`, "food, drug, and cosmetic act", "ffdca"),
-    `Federal Statutes` = str_replace_all(`Federal Statutes`, "food, drug and cosmetic act", "ffdca"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal, food, drug, and cosmetic act", "ffdca"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal food, drug, and cosmetic act,", "ffdca"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal food, drug, and cosmetic act", "ffdca"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal food, drug, and cosmetic ac", "ffdca"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal food, drug, and cosmestic act", "ffdca"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal food, drug and cosmetic act", "ffdca"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "food, drug, and cosmetic act", "ffdca"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "food, drug and cosmetic act", "ffdca"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "food drug and cosmetic act", "ffdca"),
     ### resource conservation and recovery act
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "resources conservation and recovery act", "rcra"),
@@ -219,9 +211,9 @@ cleaned_fed_statutes <- data_fed_statutes %>%
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "safe water drinking act", "sdwa"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "safe drinking act", "sdwa"),
     ### federal land policy and management act
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal land policy and management act of 1976", "flpma"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal land policy management act", "flpma"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal land policy and management act", "flpma"),
-    `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal land policy and management act of 1976", "flpma"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal land policy and management act's", "flpma"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal land policy & management act", "flpma"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "the federal land policy and management act", "flpma"),
@@ -234,8 +226,8 @@ cleaned_fed_statutes <- data_fed_statutes %>%
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "oil pollution control act", "opa"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "federal oil pollution act", "opa"),
     ### surface mining control and reclamation act
-    `Federal Statutes` = str_replace_all(`Federal Statutes`, "surface mining control and reclamation act", "smcra"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "surface mining control and reclamation act of 1977", "smcra"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "surface mining control and reclamation act", "smcra"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "surface mining control and reclaimation act", "smcra"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "surface mining conservation and reclamation act", "smcra"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "surface mining and reclamation act", "smcra"),
@@ -252,8 +244,8 @@ cleaned_fed_statutes <- data_fed_statutes %>%
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "migratory bird treaty act", "mbta"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "migratory bird act", "mbta"),
     ### marine mammal protection act
-    `Federal Statutes` = str_replace_all(`Federal Statutes`, "marine mammal protection act", "mmpa"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "marine mammal protection act of 1972", "mmpa"),
+    `Federal Statutes` = str_replace_all(`Federal Statutes`, "marine mammal protection act", "mmpa"),
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "marine mamal protection act", "mmpa"),
     ### coastal zone management act
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "coastal zone management act", "czma"),
@@ -325,6 +317,9 @@ cleaned_fed_statutes <- data_fed_statutes %>%
     `Federal Statutes` = str_replace_all(`Federal Statutes`, "\\bnon\\b", "none"),
 
   )
+
+###change cleaned_fed_statutes column name
+names(cleaned_fed_statutes) <- c('ID','Federal Stautes_c')
 
 ### cleaned
 
