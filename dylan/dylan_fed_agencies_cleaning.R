@@ -411,7 +411,11 @@ data_fed_agency <- data %>%
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "u.s. doi", "doi"), 
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "doj\\?", "doj"), 
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "fws, et al.", "fws"), 
-    `Federal Agencies` = str_replace_all(`Federal Agencies`, "international boundary and water comission of the united states", "dod"), 
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "international boundary and water comission of the united states", "dod"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "federal national mortgage association", "none"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "fhfa;", "fhfa"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "fhlmc;", "fhlmc"),
+    `Federal Agencies` = str_replace_all(`Federal Agencies`, "fmsa", "fda"),
   ) %>%
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "% ", "%"),
