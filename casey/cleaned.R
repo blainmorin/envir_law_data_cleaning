@@ -401,7 +401,7 @@ data_clean <- df_to_clean %>%
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "interstate commerce commission", "stb"),
     ) %>%
     mutate(
-      `Federal Agencies` = str_replace_all(`Federal Agencies`, "soil conservation service", "usdanrcs"),
+      `Federal Agencies` = str_replace_all(`Federal Agencies`, "soil conservation service", "nrcs"),
     ) %>%
     mutate(
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "rural utilities service", "usdard"),
