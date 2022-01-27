@@ -42,7 +42,7 @@ cases <- cases %>%
     !contains(c("pt_","dt_","fa_","statutes_","outcome_"))
   )
 
-# make orginal TON and OOC values into lists
+# make original TON and OOC values into lists
 cases <- cases %>%
   mutate(
     `Type of Nature` = str_split(
@@ -58,16 +58,25 @@ ton_mc <- read_sheet(
   "https://docs.google.com/spreadsheets/d/1F0d8W_1JTSw4kKpoaNzZ7-A9gseuwXvXIdXnx9hxeoM/edit?usp=sharing"
 )
 
-ton_mc_top = ton_mc %>%
+ton_mc_top <- ton_mc %>%
   filter(
     (row_number() == 1 |
       row_number() == 2)
   )
 
-ton_mc = ton_mc %>%
+ton_mc <- ton_mc %>%
   filter(
     (row_number() != 1 &
       row_number() != 2)
+  )
+
+# make all ton codes lower case
+ton_mc <- ton_mc %>%
+  mutate(
+    across(
+      .cols = everything(),
+      .fns = str_to_lower
+    )
   )
 
 
@@ -438,6 +447,15 @@ ooc_mc_top = ooc_mc %>%
 ooc_mc = ooc_mc %>%
   filter(
     row_number() > 3
+  )
+
+# make all ooc codes lower case
+ooc_mc <- ooc_mc %>%
+  mutate(
+    across(
+      .cols = everything(),
+      .fns = str_to_lower
+    )
   )
 
 
@@ -1051,7 +1069,17 @@ cases <- cases %>%
 test <- cases %>%
   select(
     ID,`Object of Contention`,ooc_mc1,ooc_mc2
-  )
+  ) %>%
+  group_by(
+    `Object of Contention`
+  ) %>%
+  mutate(
+    count = n()
+  ) %>%
+  ungroup()
+
+
+
 
 
 
@@ -1065,73 +1093,78 @@ cases <- cases %>%
   mutate(
     # first, code lowest-level OOC codes as NA_character_
     ooc_mc3 = NA_character_,
-    # now, start coding top level TON codes
-    # OOC 1
+    # now, start coding lowest-level OOC codes
+    # OOC 11
     ooc_mc3 = case_when(
-      ooc_mc3 == NA_character_ ~ case_when(
-        any(`Object of Contention` %in% ooc_mc$OOC1) ~ "Farming",
+      is.na(ooc_mc3) ~ case_when(
+        any(`Object of Contention` %in% ooc_mc$OOC11) ~ "Production-HLC",
         TRUE ~ ooc_mc3
       ),
-      ooc_mc3 != NA_character_ ~ case_when(
-        any(`Object of Contention` %in% ooc_mc$OOC1) ~ str_c(ooc_mc3,"Farming",sep = "%"),
+      !is.na(ooc_mc3) ~ case_when(
+        any(`Object of Contention` %in% ooc_mc$OOC11) ~ str_c(ooc_mc3,"Production-HLC",sep = "%"),
         TRUE ~ ooc_mc3
       )
     ),
-    # OOC 2
+    # OOC 12
     ooc_mc3 = case_when(
-      ooc_mc3 == NA_character_ ~ case_when(
-        any(`Object of Contention` %in% ooc_mc$OOC2) ~ "Fishing",
+      is.na(ooc_mc3) ~ case_when(
+        any(`Object of Contention` %in% ooc_mc$OOC12) ~ "Production-LLC",
         TRUE ~ ooc_mc3
       ),
-      ooc_mc3 != NA_character_ ~ case_when(
-        any(`Object of Contention` %in% ooc_mc$OOC2) ~ str_c(ooc_mc3,"Fishing",sep = "%"),
+      !is.na(ooc_mc3) ~ case_when(
+        any(`Object of Contention` %in% ooc_mc$OOC12) ~ str_c(ooc_mc3,"Production-LLC",sep = "%"),
         TRUE ~ ooc_mc3
       )
     ),
-    # OOC 3
+    # OOC 13
     ooc_mc3 = case_when(
-      ooc_mc3 == NA_character_ ~ case_when(
-        any(`Object of Contention` %in% ooc_mc$OOC3) ~ "Renewables",
+      is.na(ooc_mc3) ~ case_when(
+        any(`Object of Contention` %in% ooc_mc$OOC13) ~ "Waste Management-HLC",
         TRUE ~ ooc_mc3
       ),
-      ooc_mc3 != NA_character_ ~ case_when(
-        any(`Object of Contention` %in% ooc_mc$OOC3) ~ str_c(ooc_mc3,"Renewables",sep = "%"),
+      !is.na(ooc_mc3) ~ case_when(
+        any(`Object of Contention` %in% ooc_mc$OOC13) ~ str_c(ooc_mc3,"Waste Management-HLC",sep = "%"),
         TRUE ~ ooc_mc3
       )
     ),
-    # OOC 4
+    # OOC 14
     ooc_mc3 = case_when(
-      ooc_mc3 == NA_character_ ~ case_when(
-        any(`Object of Contention` %in% ooc_mc$OOC4) ~ "Fossil Fuel Extraction",
+      is.na(ooc_mc3) ~ case_when(
+        any(`Object of Contention` %in% ooc_mc$OOC14) ~ "Waste Management-LLC",
         TRUE ~ ooc_mc3
       ),
-      ooc_mc3 != NA_character_ ~ case_when(
-        any(`Object of Contention` %in% ooc_mc$OOC4) ~ str_c(ooc_mc3,"Fossil Fuel Extraction",sep = "%"),
+      !is.na(ooc_mc3) ~ case_when(
+        any(`Object of Contention` %in% ooc_mc$OOC14) ~ str_c(ooc_mc3,"Waste Management-LLC",sep = "%"),
         TRUE ~ ooc_mc3
       )
     ),
-    # OOC 5
+    # OOC 16
     ooc_mc3 = case_when(
-      ooc_mc3 == NA_character_ ~ case_when(
-        any(`Object of Contention` %in% ooc_mc$OOC5) ~ "Production/Transmission/Use",
+      is.na(ooc_mc3) ~ case_when(
+        any(`Object of Contention` %in% ooc_mc$OOC16) ~ "Flora/Fauna/Ecosystems-HLC",
         TRUE ~ ooc_mc3
       ),
-      ooc_mc3 != NA_character_ ~ case_when(
-        any(`Object of Contention` %in% ooc_mc$OOC5) ~ str_c(ooc_mc3,"Production/Transmission/Use",sep = "%"),
+      !is.na(ooc_mc3) ~ case_when(
+        any(`Object of Contention` %in% ooc_mc$OOC16) ~ str_c(ooc_mc3,"Flora/Fauna/Ecosystems-HLC",sep = "%"),
         TRUE ~ ooc_mc3
       )
     ),
-    # OOC 6
+    # OOC 17
     ooc_mc3 = case_when(
-      ooc_mc3 == NA_character_ ~ case_when(
-        any(`Object of Contention` %in% ooc_mc$OOC6) ~ "Nuclear",
+      is.na(ooc_mc3) ~ case_when(
+        any(`Object of Contention` %in% ooc_mc$OOC17) ~ "Flora/Fauna/Ecosystems-HLC",
         TRUE ~ ooc_mc3
       ),
-      ooc_mc3 != NA_character_ ~ case_when(
-        any(`Object of Contention` %in% ooc_mc$OOC6) ~ str_c(ooc_mc3,"Nuclear",sep = "%"),
+      !is.na(ooc_mc3) ~ case_when(
+        any(`Object of Contention` %in% ooc_mc$OOC17) ~ str_c(ooc_mc3,"Flora/Fauna/Ecosystems-LLC",sep = "%"),
         TRUE ~ ooc_mc3
       )
     )
+  )
+
+test <- cases %>%
+  select(
+    ID,`Object of Contention`,ooc_mc1,ooc_mc2,ooc_mc3
   )
 
 
