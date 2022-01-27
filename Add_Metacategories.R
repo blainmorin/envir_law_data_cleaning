@@ -448,174 +448,614 @@ cases <- cases %>%
   rowwise() %>%
   mutate(
     # first, code all top-level TON codes as "unknown"
-    ton_mc1 = "unknown",
+    ooc_mc1 = "unknown",
     # now, start coding top level TON codes
-    # TON 1
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON1) ~ "Biosphere",
-        TRUE ~ ton_mc1
+    # OOC 1
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC1) ~ "Agricultural",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON1) ~ str_c(ton_mc1,"Biosphere",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC1) ~ str_c(ooc_mc1,"Agricultural",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     ),
-    # TON 2
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON2) ~ "Biosphere",
-        TRUE ~ ton_mc1
+    # OOC 2
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC2) ~ "Agricultural",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON2) ~ str_c(ton_mc1,"Biosphere",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC2) ~ str_c(ooc_mc1,"Agricultural",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     ),
-    # TON 3
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON3) ~ "EMR",
-        TRUE ~ ton_mc1
+    # OOC 3
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC3) ~ "Energy and Resoures",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON3) ~ str_c(ton_mc1,"EMR",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC3) ~ str_c(ooc_mc1,"Energy and Resoures",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     ),
-    # TON 4
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON4) ~ "EMR",
-        TRUE ~ ton_mc1
+    # OOC 4
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC4) ~ "Energy and Resoures",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON4) ~ str_c(ton_mc1,"EMR",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC4) ~ str_c(ooc_mc1,"Energy and Resoures",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     ),
-    # TON 5
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON5) ~ "EMR",
-        TRUE ~ ton_mc1
+    # OOC 5
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC5) ~ "Energy and Resoures",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON5) ~ str_c(ton_mc1,"EMR",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC5) ~ str_c(ooc_mc1,"Energy and Resoures",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     ),
-    # TON 6
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON6) ~ "Landscapes",
-        TRUE ~ ton_mc1
+    # OOC 6
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC6) ~ "Energy and Resoures",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON6) ~ str_c(ton_mc1,"Landscapes",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC6) ~ str_c(ooc_mc1,"Energy and Resoures",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     ),
-    # TON 7
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON7) ~ "Landscapes",
-        TRUE ~ ton_mc1
+    # OOC 7
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC7) ~ "Energy and Resoures",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON7) ~ str_c(ton_mc1,"Landscapes",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC7) ~ str_c(ooc_mc1,"Energy and Resoures",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     ),
-    # TON 8
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON8) ~ "Landscapes",
-        TRUE ~ ton_mc1
+    # OOC 8
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC8) ~ "Recreation",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON8) ~ str_c(ton_mc1,"Landscapes",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC8) ~ str_c(ooc_mc1,"Recreation",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     ),
-    # TON 9
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON9) ~ "Atmosphere",
-        TRUE ~ ton_mc1
+    # OOC 9
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC9) ~ "Recreation",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON9) ~ str_c(ton_mc1,"Atmosphere",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC9) ~ str_c(ooc_mc1,"Recreation",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     ),
-    # TON 10
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON10) ~ "Anthropogenic",
-        TRUE ~ ton_mc1
+    # OOC 10
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC10) ~ "Military",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON10) ~ str_c(ton_mc1,"Anthropogenic",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC10) ~ str_c(ooc_mc1,"Military",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     ),
-    # TON 11
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON11) ~ "Anthropogenic",
-        TRUE ~ ton_mc1
+    # OOC 11
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC11) ~ "Waste/Disposal/Pollution",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON11) ~ str_c(ton_mc1,"Anthropogenic",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC11) ~ str_c(ooc_mc1,"Waste/Disposal/Pollution",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     ),
-    # TON 12
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON12) ~ "Anthropogenic",
-        TRUE ~ ton_mc1
+    # OOC 12
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC12) ~ "Waste/Disposal/Pollution",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON12) ~ str_c(ton_mc1,"Anthropogenic",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC12) ~ str_c(ooc_mc1,"Waste/Disposal/Pollution",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     ),
-    # TON 13
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON3) ~ "Anthropogenic",
-        TRUE ~ ton_mc1
+    # OOC 13
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC3) ~ "Waste/Disposal/Pollution",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON13) ~ str_c(ton_mc1,"Anthropogenic",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC13) ~ str_c(ooc_mc1,"Waste/Disposal/Pollution",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     ),
-    # TON 14
-    ton_mc1 = case_when(
-      ton_mc1 == "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON14) ~ "Non-environmenal",
-        TRUE ~ ton_mc1
+    # OOC 14
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC14) ~ "Waste/Disposal/Pollution",
+        TRUE ~ ooc_mc1
       ),
-      ton_mc1 != "unknown" ~ case_when(
-        any(`Type of Nature` %in% ton_mc$TON14) ~ str_c(ton_mc1,"Non-environmenal",sep = "%"),
-        TRUE ~ ton_mc1
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC14) ~ str_c(ooc_mc1,"Waste/Disposal/Pollution",sep = "%"),
+        TRUE ~ ooc_mc1
+      )
+    ),
+    # OOC 15
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC15) ~ "Waste/Disposal/Pollution",
+        TRUE ~ ooc_mc1
+      ),
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC15) ~ str_c(ooc_mc1,"Waste/Disposal/Pollution",sep = "%"),
+        TRUE ~ ooc_mc1
+      )
+    ),
+    # OOC 16
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC16) ~ "Biophysical",
+        TRUE ~ ooc_mc1
+      ),
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC16) ~ str_c(ooc_mc1,"Biophysical",sep = "%"),
+        TRUE ~ ooc_mc1
+      )
+    ),
+    # OOC 17
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC17) ~ "Biophysical",
+        TRUE ~ ooc_mc1
+      ),
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC17) ~ str_c(ooc_mc1,"Biophysical",sep = "%"),
+        TRUE ~ ooc_mc1
+      )
+    ),
+    # OOC 18
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC18) ~ "Biophysical",
+        TRUE ~ ooc_mc1
+      ),
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC18) ~ str_c(ooc_mc1,"Biophysical",sep = "%"),
+        TRUE ~ ooc_mc1
+      )
+    ),
+    # OOC 19
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC19) ~ "Biophysical",
+        TRUE ~ ooc_mc1
+      ),
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC19) ~ str_c(ooc_mc1,"Biophysical",sep = "%"),
+        TRUE ~ ooc_mc1
+      )
+    ),
+    # OOC 20
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC20) ~ "Construction",
+        TRUE ~ ooc_mc1
+      ),
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC20) ~ str_c(ooc_mc1,"Construction",sep = "%"),
+        TRUE ~ ooc_mc1
+      )
+    ),
+    # OOC 21
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC21) ~ "Construction",
+        TRUE ~ ooc_mc1
+      ),
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC21) ~ str_c(ooc_mc1,"Construction",sep = "%"),
+        TRUE ~ ooc_mc1
+      )
+    ),
+    # OOC 22
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC22) ~ "Construction",
+        TRUE ~ ooc_mc1
+      ),
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC22) ~ str_c(ooc_mc1,"Construction",sep = "%"),
+        TRUE ~ ooc_mc1
+      )
+    ),
+    # OOC 23
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC23) ~ "Construction",
+        TRUE ~ ooc_mc1
+      ),
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC23) ~ str_c(ooc_mc1,"Construction",sep = "%"),
+        TRUE ~ ooc_mc1
+      )
+    ),
+    # OOC 24
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC24) ~ "Regulations/Policy",
+        TRUE ~ ooc_mc1
+      ),
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC24) ~ str_c(ooc_mc1,"Regulations/Policy",sep = "%"),
+        TRUE ~ ooc_mc1
+      )
+    ),
+    # OOC 25
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC25) ~ "Legal",
+        TRUE ~ ooc_mc1
+      ),
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC25) ~ str_c(ooc_mc1,"Legal",sep = "%"),
+        TRUE ~ ooc_mc1
+      )
+    ),
+    # OOC 26
+    ooc_mc1 = case_when(
+      ooc_mc1 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC26) ~ "Non-environmental",
+        TRUE ~ ooc_mc1
+      ),
+      ooc_mc1 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC26) ~ str_c(ooc_mc1,"Non-environmental",sep = "%"),
+        TRUE ~ ooc_mc1
       )
     )
   )
 
 
 
+test <- cases %>%
+  select(
+    ID,`Type of Nature`,ooc_mc1
+  )
 
+
+
+
+
+
+### CODE LOWER-LEVEL OOC METACATEGORIES ######
+
+cases <- cases %>%
+  rowwise() %>%
+  mutate(
+    # first, code all top-level TON codes as "unknown"
+    ooc_mc2 = "unknown",
+    # now, start coding top level TON codes
+    # OOC 1
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC1) ~ "Farming",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC1) ~ str_c(ooc_mc2,"Farming",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 2
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC2) ~ "Fishing",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC2) ~ str_c(ooc_mc2,"Fishing",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 3
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC3) ~ "Renewables",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC3) ~ str_c(ooc_mc2,"Renewables",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 4
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC4) ~ "Fossil Fuel Extraction",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC4) ~ str_c(ooc_mc2,"Fossil Fuel Extraction",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 5
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC5) ~ "Production/Transmission/Use",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC5) ~ str_c(ooc_mc2,"Production/Transmission/Use",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 6
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC6) ~ "Nuclear",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC6) ~ str_c(ooc_mc2,"Nuclear",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 7
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC7) ~ "Other mineral extraction",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC7) ~ str_c(ooc_mc2,"Other mineral extraction",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 8
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC8) ~ "Hunting",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC8) ~ str_c(ooc_mc2,"Hunting",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 9
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC9) ~ "Other",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC9) ~ str_c(ooc_mc2,"Other",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 10
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC10) ~ "Military",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC10) ~ str_c(ooc_mc2,"Military",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 11
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC11) ~ "Production",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC11) ~ str_c(ooc_mc2,"Production",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 12
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC12) ~ "Production",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC12) ~ str_c(ooc_mc2,"Production",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 13
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC3) ~ "Waste Management",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC13) ~ str_c(ooc_mc2,"Waste Management",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 14
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC14) ~ "Waste Management",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC14) ~ str_c(ooc_mc2,"Waste Management",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 15
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC15) ~ "Cost and Liability",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC15) ~ str_c(ooc_mc2,"Cost and Liability",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 16
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC16) ~ "Flora/Fauna/Ecosystems",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC16) ~ str_c(ooc_mc2,"Flora/Fauna/Ecosystems",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 17
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC17) ~ "Flora/Fauna/Ecosystems",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC17) ~ str_c(ooc_mc2,"Flora/Fauna/Ecosystems",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 18
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC18) ~ "Water",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC18) ~ str_c(ooc_mc2,"Water",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 19
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC19) ~ "Land",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC19) ~ str_c(ooc_mc2,"Land",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 20
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC20) ~ "General Construction",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC20) ~ str_c(ooc_mc2,"General Construction",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 21
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC21) ~ "Water Infrastructure",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC21) ~ str_c(ooc_mc2,"Water Infrastructure",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 22
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC22) ~ "Structures/Buildings",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC22) ~ str_c(ooc_mc2,"Structures/Buildings",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 23
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC23) ~ "Transportation Infrastructure",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC23) ~ str_c(ooc_mc2,"Transportation Infrastructure",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 24
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC24) ~ "Regulations/Policy",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC24) ~ str_c(ooc_mc2,"Regulations/Policy",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 25
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC25) ~ "Legal",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC25) ~ str_c(ooc_mc2,"Legal",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    ),
+    # OOC 26
+    ooc_mc2 = case_when(
+      ooc_mc2 == "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC26) ~ "Non-environmental",
+        TRUE ~ ooc_mc2
+      ),
+      ooc_mc2 != "unknown" ~ case_when(
+        any(`Type of Nature` %in% ton_mc$OOC26) ~ str_c(ooc_mc2,"Non-environmental",sep = "%"),
+        TRUE ~ ooc_mc2
+      )
+    )
+  )
 
 
 
 test <- cases %>%
   select(
-    ID,`Type of Nature`,ton_mc1
+    ID,`Object of Contention`,ooc_mc1,ooc_mc2
   )
+
+
+
+
 
 
 ### MISC ######
