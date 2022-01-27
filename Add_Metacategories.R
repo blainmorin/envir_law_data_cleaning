@@ -36,10 +36,11 @@ out <- cases %>%
     contains(c("outcome_"))
   )
 
-# remove pt_, dt_, fa_, statutes_ and outcome_ vars from primary dataframe
+# remove pt_, dt_, fa_, statutes_ and outcome_ vars from primary dataframe - but
+# keep cercla flag
 cases <- cases %>%
   select(
-    !contains(c("pt_","dt_","fa_","statutes_","outcome_"))
+    !contains(c("pt_","dt_","fa_","statutes_","outcome_")),
   )
 
 # make original TON and OOC values into lists
@@ -53,7 +54,7 @@ cases <- cases %>%
     ),
   )
 
-### LOAD TON METACATEGORY ######
+### LOAD TON METACATEGORY DATA ######
 ton_mc <- read_sheet(
   "https://docs.google.com/spreadsheets/d/1F0d8W_1JTSw4kKpoaNzZ7-A9gseuwXvXIdXnx9hxeoM/edit?usp=sharing"
 )
@@ -423,9 +424,6 @@ cases <- cases %>%
 
 
 
-
-
-
 test <- cases %>%
   select(
     ID,`Type of Nature`,ton_mc2
@@ -434,7 +432,29 @@ test <- cases %>%
 
 
 
-### LOAD OOC METACATEGORY ######
+### CODE TON FLAG ######
+
+# Nearly all (all?) "anthropogenic" types of nature are not actually types of 
+# nature - they are objects of contention. As such, most need to be recoded
+# to identify what type of nature is actually at issue. Thus, all 
+# anthropogenic codes are flagged for re-examination.
+
+cases <- cases %>%
+  mutate(
+    ton_flag = case_when(
+      ton_mc1 == "Anthropogenic" ~ 1,
+      TRUE ~ 0
+    )
+  )
+
+
+
+### RETURN TON TO STRING ######
+cases <- cases %>%
+  mutate(
+    `Type of Nature` = str_c(`Type of Nature`,collapse = ",")
+  )
+### LOAD OOC METACATEGORY DATA ######
 ooc_mc <- read_sheet(
   "https://docs.google.com/spreadsheets/d/1zLvWX2TYLskFThpzELBJWKN-M2xISGlZE1BPN01j_3Q/edit#gid=0"
 )
@@ -1168,11 +1188,126 @@ test <- cases %>%
   )
 
 
-### MISC ######
+### CODE OOC FLAG ######
 
-any(cases$`Type of Nature`[cases$rand_num==2257])
+# There are several categories of OOC codes that need to be flagged for further
+# investigation. That includes all Waste/Disposal/Pollution: Production, all
+# Waste/Disposal/Pollution: Waste Management, and all # Biophysical:
+# Flora/Fauna/Ecosystems codes. All three of these categories need to be broken
+# into higher and lower-level codes to differentiate between detailed sources of
+# harm/contention, and the higher-level sources of those harms. E.g.,
+# contaminated ground water (a lower-level object of contention) comes from a
+# landfill (a higher-level object of contention).
 
-test1 <- c("a","b","c","d")
-test2 <- c("b","a")
-result <- test2 %in% test1
-any(result)
+# There are also several other OOC codes scattered throughout the data that indicate
+# the need for further review. Thes are listed in a separate Google Sheet, loaded here:
+ooc_flags <- read_sheet(
+  "https://docs.google.com/spreadsheets/d/1ACEeYSxZo7sKSodn3UEcSEJjm1MICuVIayNgctGeMrU/edit#gid=0"
+)
+
+cases <- cases %>%
+  mutate(
+    ooc_flag = case_when(
+      (ooc_mc3 == "Production--HLC" |
+        ooc_mc3 == "Production--LLC" |
+        ooc_mc3 == "Waste Management-HLC" |
+        ooc_mc3 == "Waste Management-LLC" |
+        ooc_mc3 == "Flora/Fauna/Ecosystems-HLC" |
+        ooc_mc3 == "Flora/Fauna/Ecosystems-LLC"
+       ) ~ 1,
+      TRUE ~ 0
+    )
+  ) %>%
+  rowwise() %>%
+  mutate(
+    ooc_flag = case_when(
+      any(`Object of Contention` %in% ooc_flags$ooc_flag_term) ~ 1,
+      TRUE ~ ooc_flag
+      )
+  )
+
+# make any_flag column to count total flagged cases
+cases <- cases %>%
+  mutate(
+    any_flag = case_when(
+      ton_flag == 1 | ooc_flag == 1 ~ 1,
+      TRUE ~ 0
+    )
+  )
+
+# as of 1/27/2022, there are 2,031 cases that need further examination
+
+### RETURN OOC TO STRING ######
+cases <- cases %>%
+  mutate(
+    `Object of Contention` = str_c(`Object of Contention`,collapse = ",")
+  )
+
+### CODE CERCLA FLAG ######
+
+# join cercla flag back
+stat_cercla <- stat %>%
+  select(
+    ID,statutes_cercla
+  ) %>%
+  rename(
+    "cercla_flag" = "statutes_cercla"
+  )
+
+cases <- left_join(cases,stat_cercla, by = "ID")
+
+### CODE CLIMATE CATEGORIES ######
+
+# create climate change terms code for find+ search
+cases <- cases %>% 
+  mutate(
+  climate_num = "unknown",
+  climate_keywords = "unknown"
+)
+
+
+
+
+
+### WRITE OUT DF FOR FURHTER RECODING ######
+
+cases_out <- cases %>%
+  select(
+    ID,
+    case_name,
+    url,
+    cite,
+    summary,
+    case_date,
+    Plaintiffs,
+    `Plaintiff Types`,
+    Defendants,
+    `Defendant Types`,
+    Aim,
+    `Type of Nature`,
+    ton_flag,
+    ton_mc1,
+    ton_mc2,
+    Species,
+    `Object of Contention`,
+    ooc_flag,
+    ooc_mc1,
+    ooc_mc2,
+    ooc_mc3,
+    Outcome,
+    `Outcome Notes`,
+    `Federal Agencies`,
+    `Federal Statutes`,
+    EJ_num,
+    EJ_keywords,
+    climate_num,
+    climate_keywords,
+    cercla_flag
+  )
+
+# write out clean data, ready for further examination
+f = "/Users/rea.115/Dropbox/Professional/Research/_RESL/Environmental_Law_Research/Data/Clean/cases_for_reexamination.csv"
+write_csv(cases_out,f)
+
+
+### THE END ######
