@@ -1,5 +1,6 @@
 install.packages("tidyverse")
 library(tidyverse)
+library(stringr)
 
 data <- read_csv("cases_coded_prelim_clean1.csv")
 
@@ -9,26 +10,7 @@ data$`Federal Agencies`
 
 data_fed_agency <- data %>%
   select(
-    `Federal Agencies`
-  ) %>%
-  group_by(
-    `Federal Agencies`
-  ) %>%
-  filter(
-    row_number()== 1
-  ) %>%
-  ungroup() %>%
-  arrange( 
-    desc(`Federal Agencies`)
-  )
-
-
-
-## 10/16/21
-
-data_fed_agency <- data %>%
-  select(
-    `Federal Agencies`
+    `Federal Agencies`, ID
   ) %>%
   group_by(
     `Federal Agencies`
@@ -425,7 +407,11 @@ data_fed_agency <- data %>%
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "&", "%"),
   ) 
 
+##renaming columns for data binding
+##final dataframe
 
+agency_df_c <- data_fed_agency %>%
+  rename(`Federal Agencies_c` = `Federal Agencies`)
 
 
 
