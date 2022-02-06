@@ -11,16 +11,36 @@ data <- read_csv("cases_coded_prelim_clean1.csv")
 
 #create new df
 
-df_to_clean <- data
+df_og_tojoin <- data
 
-#make blanks none
+### join with correct pt_types ----
+#load corrected data
+data_ngo <- read_csv("/Users/caseyr/Downloads/full_data_ngo.csv")
+#create df_to_join and select the columns to join
+data_to_join <- data_ngo %>%
+  select(
+    `ID`,`ngo_env`,`ngo_big10`,`pt_type_new`) 
+#join to new df (df_corrected)
+df_corrected <- left_join(df_og_tojoin, data_to_join, by = "ID")
+#remove old Plaintiff Types column
+df_correct = subset(df_corrected, select = -c(`Plaintiff Types`))
+#rename pt_type_new to old name (Plaintiff Types)
+names(df_correct)[names(df_correct) == "pt_type_new"] <- "Plaintiff Types"
+#reorder so Plaintiff Types is in the right place
+df_inorder <- df_correct %>%
+  select(
+    `assigned`,`group`,`ID`,`case_name`,`url`,`cite`,`summary`,`jurisdiction`,`court`,`case_date`,`year`,`Plaintiffs`,`Plaintiff Types`,everything())
 
-df_to_clean[is.na(df_to_clean)] <- "none"  
+df_to_clean <- df_inorder
+#make character
+df_to_clean$ngo_big10 <- as.character(df_to_clean$ngo_big10)
 
 ### clean data for data_clean -------
 
+#make blanks none
+df_to_clean[is.na(df_to_clean)] <- "none"
+
 data_clean <- df_to_clean %>%
-  
   ### outcome to data_clean ---------
   mutate(
     `Outcome` = str_replace_all(`Outcome`,"insurance cost","plaintiff"),
@@ -44,8 +64,9 @@ data_clean <- df_to_clean %>%
     `Outcome` = str_replace_all(`Outcome`,"neither","mixed"),
     `Outcome` = str_replace_all(`Outcome`,"neither\\?","mixed"),
     `Outcome` = str_replace_all(`Outcome`,"mixed\\?","mixed")
-  ) %>%
+  )
   ### plaintiff type and defendant type to data_clean ---------
+data_clean %>% 
   mutate(
     `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"u.s. department of labor federal credit union","fed"),
     `Plaintiff Types` = str_replace_all(`Plaintiff Types`,"unclear","other"),
@@ -137,8 +158,9 @@ data_clean <- df_to_clean %>%
     `Defendant Types` = str_replace_all(`Defendant Types`,"county","local"),
     `Defendant Types` = str_replace_all(`Defendant Types`,"seek damages","fed"),
     `Defendant Types` = str_replace_all(`Defendant Types`,"sought recovery costs for damages","local")
-  ) %>%
+  )
   ### agencies to data_clean ---------
+data_clean %>% 
   mutate(
   `Federal Agencies` = str_replace_all(`Federal Agencies`, "animal and plant health inspection services", "aphis"),
   `Federal Agencies` = str_replace_all(`Federal Agencies`, "animal and plant health inspection service", "aphis")
@@ -416,8 +438,9 @@ data_clean <- df_to_clean %>%
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "federal crop insurance corp", "fcic"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "risk management agency", "rma"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "equal employment opportunity commission", "eeoc"),
-  ) %>% 
+  )
     ### full dylan agency code ------
+data_clean %>% 
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "animal and plant health inspection services", "aphis"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "animal and plant health inspection service", "aphis")
@@ -508,7 +531,7 @@ data_clean <- df_to_clean %>%
     ) %>%
     mutate(
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "equal employment opportunity commission", "eeoc"),
-    ) %>% #### Oddities ####
+    ) %>% #### Oddities
   mutate(
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "farm service agency", "fmsa"),
     `Federal Agencies` = str_replace_all(`Federal Agencies`, "federal crop insurance corp", "fcic"),
@@ -801,8 +824,9 @@ data_clean <- df_to_clean %>%
       `Federal Agencies` = str_replace_all(`Federal Agencies`, " &", "%"),
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "& ", "%"),
       `Federal Agencies` = str_replace_all(`Federal Agencies`, "&", "%"),
-    ) %>%
+    )
   ### statutes to data_clean -----------
+data_clean %>% 
   mutate(
   ### solid waste disposal act
   `Federal Statutes` = str_replace_all(`Federal Statutes`, "soild waste disposal act", "solid waste disposal act"),
@@ -1007,8 +1031,9 @@ data_clean <- df_to_clean %>%
   
   ### none
   `Federal Statutes` = str_replace_all(`Federal Statutes`, "\\bnon\\b", "none"),
-) %>%
+) 
   ### states to data_clean ----------
+data_clean %>% 
   mutate(
   `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "dc", "district of columbia"),
   `Location (state) of conflict` = str_replace_all(`Location (state) of conflict`, "d.c.", "district of columbia"),
@@ -1141,9 +1166,10 @@ data_clean <- df_to_clean %>%
     `Location (state) of conflict` = ifelse(ID == "2017-0257-N.D.eX-001" & `Location (state) of conflict` == "dakota", "north dakota", `Location (state) of conflict`),
     `Location (state) of conflict` = ifelse(ID == "1976-0415-Maryla-001" & `Location (state) of conflict` == "northeast", "new jersey%pennsylvania", `Location (state) of conflict`),
     `Location (state) of conflict` = ifelse(ID == "1998-1998-Americ-003" & `Location (state) of conflict` == "carolina", "north carolina", `Location (state) of conflict`)
-  ) %>%
+  )
   ### species to data_clean ---------
-  mutate(
+data_clean %>% 
+    mutate(
     Species = str_replace_all(Species, "grizzly bears", "grizzly bear"),
     Species = str_replace_all(Species, "grizzlies", "grizzly bear"),
     Species = str_replace_all(Species, "louisiana blackbear", "lousiana black bear"),
@@ -1489,9 +1515,10 @@ data_clean <- df_to_clean %>%
     Species = ifelse(ID == "2009-0643-SouthX-001" & Species == "no", "none", Species),
     Species = ifelse(ID == "1999-044F-DelWeX-001" & Species == "no", "none", Species),
     Species = ifelse(ID == "2019-2019-Standi-001" & Species == "no", "none", Species)
-  ) %>%
+  )
   ### non-environmental ton to data_clean -------------
-  mutate(
+data_clean %>% 
+    mutate(
     `Type of Nature` = str_replace_all(`Type of Nature`,"non-envrionmental","non-environmental"),
     `Type of Nature` = str_replace_all(`Type of Nature`,"non-environemntal","non-environmental"),
     `Type of Nature` = str_replace_all(`Type of Nature`,"non-environemental\\?","non-environmental"),
@@ -1501,8 +1528,25 @@ data_clean <- df_to_clean %>%
     `Type of Nature` = str_replace_all(`Type of Nature`,"non-enviornemental","non-environmental"),
     `Type of Nature` = str_replace_all(`Type of Nature`,"non-enironmental","non-environmental")
   )
-
-
+  ### deference to data_clean ----
+data_clean %>%  
+  mutate(
+      deference = str_replace_all(deference,"Yes","yes"),
+      deference = str_replace_all(deference,"scientific expertise","no"),
+      deference = str_replace_all(deference,"NULL","no"),
+      deference = str_replace_all(deference,"None","no"),
+      deference = str_replace_all(deference,"none","no"),
+      deference = str_replace_all(deference,"No","no"),
+      deference = str_replace_all(deference,"no","no"),
+      deference = str_replace_all(deference,"n","no"),
+      deference = str_replace_all(deference,"mixed","yes"),
+      deference = str_replace_all(deference,"agency expertise","no"),
+      deference = str_replace_all(deference,"12","yes"),
+      deference = str_replace_all(deference,"1","yes"),
+      deference = str_replace_all(deference,"0","no"),
+      deference = str_replace_all(deference,"agenocy expertise","no"),
+      deference = str_replace_all(deference,"noo","no")
+    )
 ### add columns for analysis with 0 and 1 --------
   ### plaintiff and defendant type with 0 and 1 -----------
 
@@ -1681,11 +1725,74 @@ data_clean$statutes_none <- ifelse(grepl("none",data_clean$`Federal Statutes`, i
 data_clean$outcome_defendant <- ifelse(grepl("defendant",data_clean$`Outcome`, ignore.case = T),"1","0")
 data_clean$outcome_plaintiff <- ifelse(grepl("plaintiff",data_clean$`Outcome`, ignore.case = T),"1","0")
 data_clean$outcome_mixed <- ifelse(grepl("mixed",data_clean$`Outcome`, ignore.case = T),"1","0")
+  ### deference with 0 and 1 ----
+data_clean$deference_yes <- ifelse(grepl("yes",data_clean$`deference`, ignore.case = T),"1","0")
+  ### district courts to circuits ------
+#1st circuit
+data_clean$first_circuit <- ifelse(grepl(
+  'District Court, D. Massachusetts|United States District Court for the District of Maine|United States District Court for the District of Maine, Southern Division|United States District Court for the District of Massachusetts|United States District Court for the District of New Hampshire|United States District Court for the District of Puerto Rico|United States District Court for the District of Rhode Island|United States District Court of Puerto Rico'
+  ,data_clean$`court`, ignore.case = T),"1","0")
+
+#2nd circuit
+data_clean$second_circuit <- ifelse(grepl(
+  'District Court, D. Connecticut|United States District Court for the District of Connecticut|United States District Court for the District of Vermont|United States District Court for the Eastern District of New York|United States District Court for the Northern District of New York|United States District Court for the Southern District of New York|United States District Court for the Southern Division New York|United States District Court for the Western District of New York'
+  ,data_clean$`court`, ignore.case = T),"1","0")
+
+#3rd circuit
+data_clean$third_circuit <- ifelse(grepl(
+  'United States District Court for the District of Delaware|United States District Court for the District of New Jersey|United States District Court for the District of New Jersey, Camden Vicinage Division|United States District Court for the District of Pennsylvania|United States District Court for the District of the Virgin Islands, Division of Saint Croix|United States District Court for the District of the Virgin Islands, Division of St. Croix|United States District Court for the District of the Virgin Islands, Division of St. Thomas and St. John|United States District Court for the District of the Virgin Islands, St. Thomas and St. John Division|United States District Court for the Eastern District of Pennsylvania|United States District Court for the Middle District of Pennsylvania|United States District Court for the Virgin Islands|United States District Court for the Western District of Pennsylvania|United States District Court for the Western District of Pennsylvania, Erie Division'
+  ,data_clean$`court`, ignore.case = T),"1","0")
+
+#4th circuit
+data_clean$fourth_circuit <- ifelse(grepl(
+  'In the United States District Court for the District of Maryland|United States District Court for the District Maryland|United States District Court for the District of Maryland|United States District Court for the District of Maryland, Southern Division|United States District Court for the District of of Maryland|United States District Court for the District of South Carolina|United States District Court for the District of South Carolina, Aiken Division|United States District Court for the District of South Carolina, Beaufort Division|United States District Court for the District of South Carolina, Charleston Division|United States District Court for the District of South Carolina, Columbia Division|United States District Court for the District of South Carolina, Florence Division|United States District Court for the District of South Carolina, Greenville Division|United States District Court for the District of South Carolina, Orangeburg Division|United States District Court for the District of South Carolina, Rock Hill Division|United States District Court for the District of South Carolina, Spartanburg Division|United States District Court for the Eastern District of North Carolina, Eastern Division|United States District Court for the Eastern District of North Carolina, Elizabeth City Division|United States District Court for the Eastern District of North Carolina, Fayetteville Division|United States District Court for the Eastern District of North Carolina, New Bern Division|United States District Court for the Eastern District of North Carolina, Northern Division|United States District Court for the Eastern District of North Carolina, Raleigh Division|United States District Court for the Eastern District of North Carolina, Southern Division|United States District Court for the Eastern District of North Carolina, Washington Division|United States District Court for the Eastern District of North Carolina, Western Division|United States District Court for the Eastern District of North Carolina, Wilmington Division|United States District Court for the Eastern District of South Carolina, Columbia Division,|United States District Court for the Eastern District of South Carolina. Charleston Division|United States District Court for the Eastern District of Virginia, Alexandria Division|United States District Court for the Eastern District of Virginia, Newport News Division|United States District Court for the Eastern District of Virginia, Norfolk Division|United States District Court for the Eastern District of Virginia, Richmond Division|United States District Court for the Middle District of North Carolina|United States District Court for the Middle District of North Carolina, Durham Division|United States District Court for the Middle District of North Carolina, Greensboro Division|United States District Court for the Middle District of North Carolina, Rockingham Division|United States District Court for the Northern District of West Virginia|United States District Court for the Northern District of West Virginia, Clarksburg Division|United States District Court for the Northern District of West Virginia, Elkins Division|United States District Court for the Northern District of West Virginia, Fairmont Division|United States District Court for the Northern District of West Virginia, Parkersburg Division|United States District Court for the Southern District of West Virginia|United States District Court for the Southern District of West Virginia, At Charleston|United States District Court for the Southern District of West Virginia, Beckley Division|United States District Court for the Southern District of West Virginia, Bluefield Division|United States District Court for the Southern District of West Virginia, Charleston Division|United States District Court for the Southern District of West Virginia, Huntington Division|United States District Court for the Western District of North Carolina, Asheville Division|United States District Court for the Western District of North Carolina, Bryson City Division|United States District Court for the Western District of North Carolina, Charlotte Division|United States District Court for the Western District of Virginia|United States District Court for the Western District of Virginia, Abingdon Division|United States District Court for the Western District of Virginia, Big Stone Gap Division|United States District Court for the Western District of Virginia, Charlottesville Division|United States District Court for the Western District of Virginia, Danville Division|United States District Court for the Western District of Virginia, Lynchburg Division|United States District Court for the Western District of Virginia, Roanoke Division'
+  ,data_clean$`court`, ignore.case = T),"1","0")
+
+#5th circuit
+data_clean$fifth_circuit <- ifelse(grepl(
+  'District Court\\, E.d. Louisiana|United States District Court for the Eastern District of Louisiana, New Orleans Division|United States District Court for the Eastern District of Texas|United States District Court for the Eastern District of Texas, Beaumont Division|United States District Court for the Eastern District of Texas, Lufkin Division|United States District Court for the Eastern District of Texas, Sherman Division|United States District Court for the Eastern District of Texas, Texarkana Division|United States District Court for the Eastern District of Texas, Tyler Division|United States District Court for the Middle District of Louisiana|United States District Court for the Northern District of Mississippi, Aberdeen Division|United States District Court for the Northern District of Mississippi, Delta Division|United States District Court for the Northern District of Mississippi, Eastern Division|United States District Court for the Northern District of Mississippi, Greenville Division|United States District Court for the Northern District of Mississippi, Western Division|United States District Court for the Northern District of Texas, Amarillo Division|United States District Court for the Northern District of Texas, Dallas Division|United States District Court for the Northern District of Texas, Fort Worth Division|United States District Court for the Northern District of Texas, Wichita Falls Division|United States District Court for the Southern District of Mississippi, Eastern Division|United States District Court for the Southern District of Mississippi, Jackson Division|United States District Court for the Southern District of Mississippi, Northern Division|United States District Court for the Southern District of Mississippi, Southern Division|United States District Court for the Southern District of Mississippi, Western Division|United States District Court for the Southern District of Texas|United States District Court for the Southern District of Texas, Brownsville Division|United States District Court for the Southern District of Texas, Corpus Christi Division|United States District Court for the Southern District of Texas, Galveston Division|United States District Court for the Southern District of Texas, Houston Division|United States District Court for the Southern District of Texas, Mcallen Division|United States District Court for the Southern District of Texas, Victoria Division|United States District Court for the Western District of Louisiana|United States District Court for the Western District of Louisiana, Alexandria Division|United States District Court for the Western District of Louisiana, Lafayette - Opelousas Division|United States District Court for the Western District of Louisiana, Lafayette Division|United States District Court for the Western District of Louisiana, Lafayette-Opelousas Division|United States District Court for the Western District of Louisiana, Lake Charles Division|United States District Court for the Western District of Louisiana, Monroe Division|United States District Court for the Western District of Louisiana, Opelousas Division|United States District Court for the Western District of Louisiana, Shreveport Division|United States District Court for the Western District of Texas, Austin Division|United States District Court for the Western District of Texas, El Paso Division|United States District Court for the Western District of Texas, Midland - Odessa Division|United States District Court for the Western District of Texas, Pecos Division|United States District Court for the Western District of Texas, San Antonio Division|United States District Court for the Western District of Texas, Waco Division'
+  ,data_clean$`court`, ignore.case = T),"1","0")
+
+#6th circuit
+data_clean$sixth_circuit <- ifelse(grepl(
+  'United States District Court for the Eastern District of Kentucky|United States District Court for the Eastern District of Kentucky At Lexington|United States District Court for the Eastern District of Kentucky, Ashland Division|United States District Court for the Eastern District of Kentucky, Central Division|United States District Court for the Eastern District of Kentucky, Frankfort Division|United States District Court for the Eastern District of Kentucky, London Division|United States District Court for the Eastern District of Kentucky, Northern Division|United States District Court for the Eastern District of Kentucky, Pikeville Division|United States District Court for the Eastern District of Kentucky, Southern Division|United States District Court for the Eastern District of Michigan|United States District Court for the Eastern District of Michigan, Northern Division|United States District Court for the Eastern District of Michigan, Southern Division|United States District Court for the Eastern District of Tennessee|United States District Court for the Eastern District of Tennessee, Greeneville Division|United States District Court for the Eastern District of Tennessee, Knoxville Division|United States District Court for the Eastern District of Tennessee, Northeastern Division|United States District Court for the Eastern District of Tennessee, Northern Division|United States District Court for the Eastern District of Tennessee, Southern Division|United States District Court for the Middle District of Tennessee, Columbia Division|United States District Court for the Middle District of Tennessee, Nashville Division|United States District Court for the Northern District of Ohio|United States District Court for the Northern District of Ohio, Eastern Division|United States District Court for the Northern District of Ohio, Western Division|United States District Court for the Southern District of Ohio Eastern Division|United States District Court for the Southern District of Ohio, Eastern Division|United States District Court for the Southern District of Ohio, Western Division|United States District Court for the Western District of Kentucky|United States District Court for the Western District of Kentucky, Louisville Division|United States District Court for the Western District of Kentucky, Owensboro Division|United States District Court for the Western District of Kentucky, Paducah Division|United States District Court for the Western District of Kentucky, Paducha Division|United States District Court for the Western District of Michigan|United States District Court for the Western District of Michigan, Northern Division|United States District Court for the Western District of Michigan, Southern Division|United States District Court for the Western District of Tennessee|United States District Court for the Western District of Tennessee, Eastern Division|United States District Court for the Western District of Tennessee, Western Division'
+  ,data_clean$`court`, ignore.case = T),"1","0")
+
+#7th circuit
+data_clean$seventh_circuit <- ifelse(grepl(
+  'District Court, S.d. Illinois, S.d.|United States District Court for the Central District of Illinois|United States District Court for the Central District of Illinois, Peoria Division|United States District Court for the Central District of Illinois, Rock Island Division|United States District Court for the Central District of Illinois, Springfield Division|United States District Court for the Central District of Illinois, Urbana Division|United States District Court for the Eastern District of Wisconsin|United States District Court for the Northern District of Illinois|United States District Court for the Northern District of Illinois Eastern Division|United States District Court for the Northern District of Illinois, Eastern Division|United States District Court for the Northern District of Illinois, Western Division|United States District Court for the Northern District of Indiana|United States District Court for the Northern District of Indiana, Fort Wayne Division|United States District Court for the Northern District of Indiana, Hammond Division|United States District Court for the Northern District of Indiana, South Bend Division|United States District Court for the Northern District of Indiana, South Bend Division.|United States District Court for the Southern District of Illinois|United States District Court for the Southern District of Illinois, Benton Division|United States District Court for the Southern District of Illinois, Northern Division|United States District Court for the Southern District of Indiana Indianapolis Division|United States District Court for the Southern District of Indiana, Indianapolis Division|United States District Court for the Southern District of Indiana, New Albany Division|United States District Court for the Southern District of Indiana, Terre Haute Division|United States District Court for the Western District of Wisconsin|United States District Court, Central District of Illinois, Springfield Division'
+  ,data_clean$`court`, ignore.case = T),"1","0")
+
+#8th circuit
+data_clean$eighth_circuit <- ifelse(grepl(
+  'the United States District Court for the Western District of Missouri, Western Division|United States District Court for the District of Minnesota|United States District Court for the District of Minnesota Third Division|United States District Court for the District of Minnesota, Fifth Division|United States District Court for the District of Minnesota, Fourth Division|United States District Court for the District of Minnesota, Third Division|United States District Court for the District of Nebraska|United States District Court for the District of North Dakota|United States District Court for the District of North Dakota, Northwestern Division|United States District Court for the District of North Dakota, Southeastern Division|United States District Court for the District of North Dakota, Southwestern Division|United States District Court for the District of South Dakota, Central Division|United States District Court for the District of South Dakota, Northern Division|United States District Court for the District of South Dakota, Southern Division|United States District Court for the District of South Dakota, Western Division|United States District Court for the Eastern District of Arkansas, Central Division|United States District Court for the Eastern District of Arkansas, Eastern Division|United States District Court for the Eastern District of Arkansas, Northern Division|United States District Court for the Eastern District of Arkansas, Western Division|United States District Court for the Eastern District of Missouri|United States District Court for the Eastern District of Missouri, Eastern Division|United States District Court for the Eastern District of Missouri, Northern Division|United States District Court for the Eastern District of Missouri, Southeastern Division|United States District Court for the Northern District of Iowa, Cedar Rapids Division|United States District Court for the Northern District of Iowa, Central Division|United States District Court for the Northern District of Iowa, Eastern Division|United States District Court for the Northern District of Iowa, Western Division|United States District Court for the Southern District of Iowa, Central Division|United States District Court for the Southern District of Iowa, Davenport Division|United States District Court for the Southern District of Iowa, Western Division|United States District Court for the Western District of Arkansas, El Dorado Division|United States District Court for the Western District of Arkansas, Fayetteville Division|United States District Court for the Western District of Arkansas, Fort Smith Division|United States District Court for the Western District of Arkansas, Harrison Division|United States District Court for the Western District of Arkansas, Hot Springs Division|United States District Court for the Western District of Arkansas, Texarkana Division|United States District Court for the Western District of Missouri, Central Division|United States District Court for the Western District of Missouri, Southwestern Division|United States District Court for the Western District of Missouri, Western Division'
+  ,data_clean$`court`, ignore.case = T),"1","0")
+
+#9th circuit
+data_clean$ninth_circuit <- ifelse(grepl(
+  'District Court, D. Idaho, S.d.|District Court, D. Montana|District Court, E.d. Washington, S.d.|District Court, S.d. California, Central Division|District Court, S.d. California, S.d.|United States District Court for the Central District of California|United States District Court for the Central District of California, Western Division|United States District Court for the District of Alaska|United States District Court for the District of Arizona|United States District Court for the District of Guam|United States District Court for the District of Hawaii|United States District Court for the District of Idaho|United States District Court for the District of Idaho, Northern Division|United States District Court for the District of Montana Butte Division|United States District Court for the District of Montana, Billings Division|United States District Court for the District of Montana, Butte Division|United States District Court for the District of Montana, Great Falls Division|United States District Court for the District of Montana, Helena Division|United States District Court for the District of Montana, Missoula Division|United States District Court for the District of Nevada|United States District Court for the District of Oregon|United States District Court for the District of Oregon, Eugene Division|United States District Court for the District of Oregon, Medford Division|United States District Court for the District of Oregon, Pendleton Division|United States District Court for the District of Oregon, Portland Division|United States District Court for the Eastern District of California|United States District Court for the Eastern District of Washington|United States District Court for the Eastern District of Washington, Southern Division|United States District Court for the Northern District of California|United States District Court for the Northern District of California, Eureka Division|United States District Court for the Northern District of California, Oakland Division|United States District Court for the Northern District of California, San Francisco Division|United States District Court for the Northern District of California, San Jose Division|United States District Court for the Southern District of California|United States District Court for the Southern District of California, Southern Division|United States District Court for the Western District of Washington|United States District Court for the Western District of Washington At Seattle|United States District Court for the Western District of Washington, Northern Division|United States District Court for the Western District of Washington, Seattle Division|United States District Court for the Western District of Washington, Tacoma Division|United States District Court, Central District of California'
+  ,data_clean$`court`, ignore.case = T),"1","0")
+
+#10th circuit
+data_clean$tenth_circuit <- ifelse(grepl(
+  'District Court, D. Colorado|District Court, D. Wyoming|District Court, N.d. Oklahoma|United States District Court for the District of Colorado|United States District Court for the District of Kansas|United States District Court for the District of New Mexico|United States District Court for the District of Utah|United States District Court for the District of Utah, Central Division|United States District Court for the District of Wyoming|United States District Court for the Eastern District of Oklahoma|United States District Court for the Northern District of Oklahoma|United States District Court for the Western District of Oklahoma|United States District Court for the Western District of Oklahoma, Criminal Division'
+  ,data_clean$`court`, ignore.case = T),"1","0")
+
+#11th circuit
+data_clean$eleventh_circuit <- ifelse(grepl(
+  'District Court, S.d. Georgia, Savannah Division|United States District Court for the Middle District of Alabama, Northern Division|United States District Court for the Middle District of Florida, Fort Myers Division|United States District Court for the Middle District of Florida, Jacksonville Division|United States District Court for the Middle District of Florida, Ocala Division|United States District Court for the Middle District of Florida, Tampa Division|United States District Court for the Middle District of Georgia, Macon Division|United States District Court for the Middle District of Georgia, Valdosta Division|United States District Court for the Northern District of Alabama, Eastern Division|United States District Court for the Northern District of Alabama, Jasper Division|United States District Court for the Northern District of Alabama, Middle Division|United States District Court for the Northern District of Alabama, Northeastern Division|United States District Court for the Northern District of Alabama, Northwestern Division|United States District Court for the Northern District of Alabama, Southern Division|United States District Court for the Northern District of Florida, Gainesville Division|United States District Court for the Northern District of Florida, Panama City Division|United States District Court for the Northern District of Florida, Pensacola Division|United States District Court for the Northern District of Florida, Tallahassee Division|United States District Court for the Northern District of Georgia Newnan Division|United States District Court for the Northern District of Georgia, Atlanta Division|United States District Court for the Northern District of Georgia, Gainesville Division|United States District Court for the Northern District of Georgia, Newnan Division|United States District Court for the Northern District of Georgia, Rome Division|United States District Court for the Southern District of Alabama, Northern Division|United States District Court for the Southern District of Alabama, Southern Division|United States District Court for the Southern District of Florida|United States District Court for the Southern District of Florida, Miami Division|United States District Court for the Southern District of Georgia, Augusta Division|United States District Court for the Southern District of Georgia, Brunswick Division|United States District Court for the Southern District of Georgia, Savannah Division|United States District Court for the Southern District of Georgia, Waycross Division|United States District Court for the Southern District of Georgia,savannah Division'
+  ,data_clean$`court`, ignore.case = T),"1","0")
+
+#DC circuit
+data_clean$dc_circuit <- ifelse(grepl(
+  'United States District Court for the District of Columbia|United States District Court for the District of Columbia, Civil Division|United States District Court for the District of Columbia.'
+  ,data_clean$`court`, ignore.case = T),"1","0")
 
 ### delete non-environmental cases from data --------
 
 data_clean_no_non <- subset(data_clean,`Type of Nature`!="non-environmental" & `Type of Nature`!="none")
 
+
 ### export data --------
 
-write.csv(data_clean_no_non,"/Users/caseyr/Documents/School/OSU/Rea Environmental Law/Capstone/data_clean_no_non_w_analysis_1_21_22.csv", row.names = FALSE)
+write.csv(data_clean_no_non,"/Users/caseyr/Documents/School/OSU/Rea Environmental Law/Capstone/data_2_6.csv", row.names = FALSE)
