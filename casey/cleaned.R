@@ -1670,7 +1670,7 @@ data_clean$fa_omb <- ifelse(grepl("omb",data_clean$`Federal Agencies`, ignore.ca
 data_clean$fa_osmre <- ifelse(grepl("osmre",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
 data_clean$fa_phmsa <- ifelse(grepl("phmsa",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
 data_clean$fa_stb <- ifelse(grepl("stb",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
-data_clean$fa_usdanrcs <- ifelse(grepl("usdanrcs",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
+data_clean$fa_nrcs <- ifelse(grepl("usdanrcs",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
 data_clean$fa_usdard <- ifelse(grepl("usdard",data_clean$`Federal Agencies`, ignore.case = T),"1","0")
 
 # create fa_other column
@@ -1761,11 +1761,24 @@ data_clean <- data_clean %>%
     )
   )
 
+  ### ngo_env and ngo_big10 with 0 and 1 ---
+data_clean$ngo_env_pro <- ifelse(grepl("pro|pro//!",data_clean$`ngo_env`, ignore.case = T),"1","0")
+data_clean$ngo_env_neutral <- ifelse(grepl("neutral",data_clean$`ngo_env`, ignore.case = T),"1","0")
+data_clean$ngo_env_anti <- ifelse(grepl("anti",data_clean$`ngo_env`, ignore.case = T),"1","0")
+
+data_clean <- data_clean %>%
+  mutate(
+    ngo_big10 = str_replace_all(ngo_big10,"none","0")
+    )
 ### delete non-environmental cases from data --------
 
 data_clean_no_non <- subset(data_clean,`Type of Nature`!="non-environmental" & `Type of Nature`!="none")
 
+### reorder df -----
+data_clean_no_non <- data_clean_no_non %>%
+  select(assigned,group,ID,case_name,url,cite,summary,jurisdiction,court,case_date,year,Plaintiffs,`Plaintiff Types`,Defendants,`Defendant Types`,Aim,`Type of Nature`,`Object of Contention`,Outcome,`Outcome Notes`,Procedural,`Federal Agencies`,`Location (state) of conflict`,Species,`Federal Statutes`,Science,Experts,Flag,`Further notes`,cites,EJ_num,EJ_keywords,dr_phd,deference,row_num,rand_num,pt_fed,pt_state,pt_local,pt_military,pt_civic_assn,pt_ngo,pt_union,pt_individual,pt_industry,pt_trade_assn,pt_tribe,pt_public_org,pt_religious_org,pt_other,pt_count,dt_fed,dt_state,dt_local,dt_military,dt_civic_assn,dt_ngo,dt_union,dt_individual,dt_industry,dt_trade_assn,dt_tribe,dt_public_org,dt_religious_org,dt_other,dt_count,fa_aphis,fa_arc,fa_aec,fa_acoe,fa_bif,fa_ibla,fa_blm,fa_boem,fa_bor,fa_bsee,`fa_eda`,`fa_epa`,`fa_faa`,`fa_ferc`,`fa_fema`,`fa_fda`,`fa_fha`,`fa_fhfa`,`fa_fra`,`fa_fsa`,`fa_fsb`,`fa_ftc`,`fa_fta`,`fa_fws`,`fa_fs`,`fa_fhlmc`,`fa_gsa`,`fa_usgs`,`fa_gao`,`fa_mms`,`fa_nasa`,`fa_nmfs`,`fa_nnsa`,`fa_noaa`,`fa_nps`,`fa_nrc`,`fa_omb`,`fa_osmre`,`fa_phmsa`,`fa_stb`,`fa_nrcs`,`fa_usdard`,`fa_other`,`fa_military`,`statutes_solidwaste`,`statutes_fwpca`,`statutes_cwa`,`statutes_caa`,`statutes_cercla`,`statutes_nepa`,`statutes_esa`,`statutes_ffdca`,`statutes_rcra`,`statutes_nfma`,`statutes_fifra`,`statutes_aea`,`statutes_reclamationact`,`statutes_riversandharbors`,`statutes_tsca`,`statutes_swda`,`statutes_flpma`,`statutes_opa`,`statutes_smcra`,`statutes_wildernessact`,`statutes_mbta`,`statutes_mmpa`,`statutes_czma`,`statutes_energypolicyact`,`statutes_msa`,`statutes_epcra`,`statutes_mprsa`,`statutes_ocean`,`statutes_multipleuse`,`statutes_nca`,`statutes_fwca`,`statutes_nwpa`,`statutes_nationalpsoa`,`statutes_eisa`,`statutes_fishandwildlifeact`,statutes_ppa,statutes_antiquitiesact,statutes_fpa,statutes_lacey,statutes_mla,statutes_wildandscenic,statutes_organic,statutes_none,outcome_defendant,outcome_plaintiff,outcome_mixed,ngo_env,ngo_env_pro,ngo_env_neutral,ngo_env_anti,ngo_big10,deference_yes,circuit)
+
 
 ### export data --------
 
-write.csv(data_clean_no_non,"/Users/caseyr/Documents/School/OSU/Rea Environmental Law/Capstone/data_2_7.csv", row.names = FALSE)
+write.csv(data_clean_no_non,"/Users/caseyr/Documents/School/OSU/Rea Environmental Law/Capstone/data_2_8.csv", row.names = FALSE)
