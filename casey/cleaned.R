@@ -1781,4 +1781,10 @@ data_clean_no_non <- data_clean_no_non %>%
 
 ### export data --------
 
-write.csv(data_clean_no_non,"/Users/caseyr/Documents/School/OSU/Rea Environmental Law/Capstone/data_2_8.csv", row.names = FALSE)
+#write.csv(data_clean_no_non,"/Users/caseyr/Documents/School/OSU/Rea Environmental Law/Capstone/data_2_8.csv", row.names = FALSE)
+write.csv(data_clean_no_non, "cases_coded_casey_script_cleaned.csv")
+
+# next, pass to to Add_Metacategories.R
+
+
+# the end
