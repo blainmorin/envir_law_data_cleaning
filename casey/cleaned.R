@@ -15,7 +15,7 @@ df_og_tojoin <- data
 
 ### join with correct pt_types ----
 #load corrected data
-data_ngo <- read_csv("/Users/caseyr/Downloads/full_data_ngo.csv")
+data_ngo <- read_csv("full_data_ngo.csv")
 #create df_to_join and select the columns to join
 data_to_join <- data_ngo %>%
   select(
