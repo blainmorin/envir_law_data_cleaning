@@ -1269,7 +1269,6 @@ cases <- cases %>%
   housing_keywords = "unknown"
 )
 
-
 ### WRITE OUT DF FOR FURHTER RECODING ######
 
 cases_out <- cases %>%
