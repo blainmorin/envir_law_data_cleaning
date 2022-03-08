@@ -9,7 +9,7 @@ library(googlesheets4)
 
 # load data
 # note: in the future, modify to simply take input from cleaning scripts
-cases <- read_csv("/Users/rea.115/Dropbox/Professional/Research/_RESL/Environmental_Law_Research/Data/Clean/data_clean_no_non_w_analysis_1_21_22.csv")
+cases <- read_csv("cases_coded_casey_script_cleaned.csv")
 
 # break away pt_, dt_, fa_ vars
 pt_dt <- cases %>%
@@ -79,8 +79,6 @@ ton_mc <- ton_mc %>%
       .fns = str_to_lower
     )
   )
-
-
 
 ### CODE TOP-LEVEL TON METACATEGORIES ######
 
@@ -439,13 +437,15 @@ test <- cases %>%
 # to identify what type of nature is actually at issue. Thus, all 
 # anthropogenic codes are flagged for re-examination.
 
-cases <- cases %>%
-  mutate(
-    ton_flag = case_when(
-      ton_mc1 == "Anthropogenic" ~ 1,
-      TRUE ~ 0
-    )
-  )
+# as of 03_07_2022: out of use
+
+# cases <- cases %>%
+#   mutate(
+#     ton_flag = case_when(
+#       ton_mc1 == "Anthropogenic" ~ 1,
+#       TRUE ~ 0
+#     )
+#   )
 
 
 
@@ -1190,6 +1190,8 @@ test <- cases %>%
 
 ### CODE OOC FLAG ######
 
+# AS OF 03_07_2022, OUT OF USE
+
 # There are several categories of OOC codes that need to be flagged for further
 # investigation. That includes all Waste/Disposal/Pollution: Production, all
 # Waste/Disposal/Pollution: Waste Management, and all # Biophysical:
@@ -1201,39 +1203,39 @@ test <- cases %>%
 
 # There are also several other OOC codes scattered throughout the data that indicate
 # the need for further review. Thes are listed in a separate Google Sheet, loaded here:
-ooc_flags <- read_sheet(
-  "https://docs.google.com/spreadsheets/d/1ACEeYSxZo7sKSodn3UEcSEJjm1MICuVIayNgctGeMrU/edit#gid=0"
-)
-
-cases <- cases %>%
-  mutate(
-    ooc_flag = case_when(
-      (ooc_mc3 == "Production--HLC" |
-        ooc_mc3 == "Production--LLC" |
-        ooc_mc3 == "Waste Management-HLC" |
-        ooc_mc3 == "Waste Management-LLC" |
-        ooc_mc3 == "Flora/Fauna/Ecosystems-HLC" |
-        ooc_mc3 == "Flora/Fauna/Ecosystems-LLC"
-       ) ~ 1,
-      TRUE ~ 0
-    )
-  ) %>%
-  rowwise() %>%
-  mutate(
-    ooc_flag = case_when(
-      any(`Object of Contention` %in% ooc_flags$ooc_flag_term) ~ 1,
-      TRUE ~ ooc_flag
-      )
-  )
-
-# make any_flag column to count total flagged cases
-cases <- cases %>%
-  mutate(
-    any_flag = case_when(
-      ton_flag == 1 | ooc_flag == 1 ~ 1,
-      TRUE ~ 0
-    )
-  )
+# ooc_flags <- read_sheet(
+#   "https://docs.google.com/spreadsheets/d/1ACEeYSxZo7sKSodn3UEcSEJjm1MICuVIayNgctGeMrU/edit#gid=0"
+# )
+# 
+# cases <- cases %>%
+#   mutate(
+#     ooc_flag = case_when(
+#       (ooc_mc3 == "Production--HLC" |
+#         ooc_mc3 == "Production--LLC" |
+#         ooc_mc3 == "Waste Management-HLC" |
+#         ooc_mc3 == "Waste Management-LLC" |
+#         ooc_mc3 == "Flora/Fauna/Ecosystems-HLC" |
+#         ooc_mc3 == "Flora/Fauna/Ecosystems-LLC"
+#        ) ~ 1,
+#       TRUE ~ 0
+#     )
+#   ) %>%
+#   rowwise() %>%
+#   mutate(
+#     ooc_flag = case_when(
+#       any(`Object of Contention` %in% ooc_flags$ooc_flag_term) ~ 1,
+#       TRUE ~ ooc_flag
+#       )
+#   )
+# 
+# # make any_flag column to count total flagged cases
+# cases <- cases %>%
+#   mutate(
+#     any_flag = case_when(
+#       ton_flag == 1 | ooc_flag == 1 ~ 1,
+#       TRUE ~ 0
+#     )
+#   )
 
 # as of 1/27/2022, there are 2,031 cases that need further examination
 
@@ -1262,11 +1264,10 @@ cases <- left_join(cases,stat_cercla, by = "ID")
 cases <- cases %>% 
   mutate(
   climate_num = "unknown",
-  climate_keywords = "unknown"
+  climate_keywords = "unknown",
+  housing_num = "unknown",
+  housing_keywords = "unknown"
 )
-
-
-
 
 
 ### WRITE OUT DF FOR FURHTER RECODING ######
@@ -1285,28 +1286,38 @@ cases_out <- cases %>%
     `Defendant Types`,
     Aim,
     `Type of Nature`,
-    ton_flag,
+    #ton_flag,
     ton_mc1,
     ton_mc2,
     Species,
     `Object of Contention`,
-    ooc_flag,
+    #ooc_flag,
     ooc_mc1,
     ooc_mc2,
     ooc_mc3,
     Outcome,
     `Outcome Notes`,
     `Federal Agencies`,
+    `Location (state) of conflict`,
+    Species,
     `Federal Statutes`,
+    Science,
+    Experts,
+    `Further notes`,
+    cites,
     EJ_num,
     EJ_keywords,
+    dr_phd,
+    deference,
     climate_num,
     climate_keywords,
+    housing_num,
+    housing_keywords,
     cercla_flag
   )
 
 # write out clean data, ready for further examination
-f = "/Users/rea.115/Dropbox/Professional/Research/_RESL/Environmental_Law_Research/Data/Clean/cases_for_reexamination.csv"
+f = "cases_coded_for_data_validation_030722.csv"
 write_csv(cases_out,f)
 
 
